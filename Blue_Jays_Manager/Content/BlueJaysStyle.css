@@ -1,0 +1,189 @@
+﻿.homepageDiv {
+    border: 1px groove black;
+    border-radius: 5px;
+    padding: 2vmin;
+    height: 100vh;
+    background-color: #d3dce3;
+    text-align: center;
+}
+
+body {
+    height: 100%;
+    background-color: #ffffff;
+}
+
+@font-face {
+    font-family: 'Raleway-Black';
+    src: url('../fonts/Raleway-Black.ttf') format('truetype');
+}
+
+.homepageDiv .btn-block {
+    background-color: #10498e;
+}
+
+@font-face {
+    font-family: 'AlexBrush-Regular';
+    src: url('../fonts/AlexBrush-Regular.ttf') format('truetype');
+}
+
+.navbar-brand {
+    /*top/bottom right/left*/
+    padding: 2px 25px;
+}
+/* NAVBAR ++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+.navbar-default {
+    background-color: #243b69;
+    border-color: #192949;
+}
+
+    .navbar-default .navbar-brand {
+        color: #ffffff;
+    }
+
+        .navbar-default .navbar-brand:hover,
+        .navbar-default .navbar-brand:focus {
+            color: #3664c1;
+        }
+
+    .navbar-default .navbar-text {
+        color: #ffffff;
+    }
+
+    .navbar-default .navbar-nav > li > a {
+        color: #ffffff;
+    }
+
+        .navbar-default .navbar-nav > li > a:hover,
+        .navbar-default .navbar-nav > li > a:focus {
+            color: #3664c1;
+        }
+
+    .navbar-default .navbar-nav > li > .dropdown-menu {
+        background-color: #243b69;
+    }
+
+        .navbar-default .navbar-nav > li > .dropdown-menu > li > a {
+            color: #ffffff;
+        }
+
+            .navbar-default .navbar-nav > li > .dropdown-menu > li > a:hover,
+            .navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
+                color: #3664c1;
+                background-color: #192949;
+            }
+
+        .navbar-default .navbar-nav > li > .dropdown-menu > li > .divider {
+            background-color: #192949;
+        }
+
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #3664c1;
+        background-color: #192949;
+    }
+
+    .navbar-default .navbar-nav > .active > a,
+    .navbar-default .navbar-nav > .active > a:hover,
+    .navbar-default .navbar-nav > .active > a:focus {
+        color: #3664c1;
+        background-color: #192949;
+    }
+
+    .navbar-default .navbar-nav > .open > a,
+    .navbar-default .navbar-nav > .open > a:hover,
+    .navbar-default .navbar-nav > .open > a:focus {
+        color: #3664c1;
+        background-color: #192949;
+    }
+
+    .navbar-default .navbar-toggle {
+        border-color: #192949;
+    }
+
+        .navbar-default .navbar-toggle:hover,
+        .navbar-default .navbar-toggle:focus {
+            background-color: #192949;
+        }
+
+        .navbar-default .navbar-toggle .icon-bar {
+            background-color: #ffffff;
+        }
+
+    .navbar-default .navbar-collapse,
+    .navbar-default .navbar-form {
+        border-color: #ffffff;
+    }
+
+    .navbar-default .navbar-link {
+        color: #ffffff;
+    }
+
+        .navbar-default .navbar-link:hover {
+            color: #3664c1;
+        }
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: #ffffff;
+    }
+
+        .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+        .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+            color: #3664c1;
+        }
+
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #3664c1;
+        background-color: #192949;
+    }
+}
+
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+    width: 70%;
+    margin: auto;
+}
+
+.playersJumbo {
+    height: 400px;
+}
+
+.list {
+    background-color: #fff;
+    margin-top: 50px;
+}
+
+
+.loginView {
+    background-color: #fff;
+    box-shadow: 2px 2px 10px;
+    padding-right: 30px;
+    color: #fff;
+}
+
+.registerView {
+    background-color: #fff;
+    margin-top: 100px;
+}
+
+#Resetbtn {
+    border: 1px solid #243B69;
+    color: #243B69;
+}
+
+#BtnLogin {
+    border: 1px solid #243B69;
+    color: #243B69;
+}
+
+#playerprofile {
+    background: #243B69; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#134A8E,#134A8E,#EDE8E8); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#134A8E,#134A8E, #EDE8E8); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#134A8E,#134A8E, #EDE8E8); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#134A8E,#134A8E, #EDE8E8); /* Standard syntax */
+}

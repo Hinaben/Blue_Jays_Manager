@@ -1,0 +1,167 @@
+create table tblUsers
+(
+	[Id] int identity primary key,
+	[FirstName] nvarchar(50) Not Null,
+	[LastName] nvarchar(50) Not Null,
+	[Email] NVARCHAR(50) Not Null,
+	[UserName] NVARCHAR(50) Not Null,
+	[Password] NVARCHAR(200) Not Null,
+	[Role] nvarchar(50) Not Null,
+	[Attempts] int,
+	[IsLocked] bit,
+	[LockedDate] datetime
+)
+
+
+USE [Blue_Jays_Manager]
+GO
+
+/****** Object:  StoredProcedure [dbo].[spAuthenticateUser]    Script Date: 7/27/2016 1:43:39 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER proc [dbo].[spAuthenticateUser]
+@UserName nvarchar(100),
+@Password nvarchar(200)
+as
+Begin
+ Declare @AccountLocked bit
+ Declare @Count int
+ Declare @RetryCount int
+ 
+ Select @AccountLocked = IsLocked
+ from tblUsers where UserName = @UserName
+  
+ --If the account is already locked
+ if(@AccountLocked = 1)
+ Begin
+  Select 1 as AccountLocked, 0 as Authenticated, 0 as RetryAttempts
+ End
+ Else
+ Begin
+  -- Check if the username and password match
+  Select @Count = COUNT(UserName) from tblUsers
+  where [UserName] = @UserName and [Password] = @Password
+  
+  -- If match found
+  if(@Count = 1)
+  Begin
+   -- Reset RetryAttempts 
+   Update tblUsers set Attempts = 0
+   where UserName = @UserName
+       
+   Select Id, FirstName, LastName, Email, UserName, Password, Role from tblUsers
+   where UserName = @UserName
+
+  End
+  Else
+  Begin
+   -- If a match is not found
+   Select @RetryCount = IsNULL(Attempts, 0)
+   from tblUsers
+   where UserName = @UserName
+   
+   Set @RetryCount = @RetryCount + 1
+   
+   if(@RetryCount <= 3)
+   Begin
+    -- If re-try attempts are not completed
+    Update tblUsers set Attempts = @RetryCount
+    where UserName = @UserName 
+    
+    Select 0 as AccountLocked, 0 as Authenticated, @RetryCount as RetryAttempts
+   End
+   Else
+   Begin
+    -- If re-try attempts are completed
+    Update tblUsers set Attempts = @RetryCount,
+    IsLocked = 1, LockedDate = GETDATE()
+    where UserName = @UserName
+
+    Select 1 as AccountLocked, 0 as Authenticated, 0 as RetryAttempts
+   End
+  End
+ End
+End
+GO
+
+
+
+USE [Blue_Jays_Manager]
+GO
+
+/****** Object:  StoredProcedure [dbo].[spEnableAdminUser]    Script Date: 7/27/2016 1:44:03 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+create procedure [dbo].[spEnableAdminUser]
+@UserName nvarchar(50)
+as
+	Begin
+		Update tblUsers
+		set Attempts = 0, IsLocked = Null, LockedDate = Null
+		where UserName = @UserName
+	End
+GO
+
+
+USE [Blue_Jays_Manager]
+GO
+
+/****** Object:  StoredProcedure [dbo].[spRegisterUser]    Script Date: 7/27/2016 1:44:24 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+CREATE PROC [dbo].[spRegisterUser] 
+@FirstName nvarchar(50),
+@LastName nvarchar(50),
+@Email NVARCHAR(50),
+@UserName NVARCHAR(50),
+@Password NVARCHAR(200),
+@Role nvarchar(50)
+AS
+	BEGIN
+		DECLARE @Count INT
+		DECLARE @ReturnCode INT
+
+		SELECT @Count = COUNT(UserName)
+		FROM tblUsers
+		WHERE UserName = @UserName
+
+		IF @Count > 0
+			BEGIN
+				SET @ReturnCode = - 1
+			END
+		ELSE
+			BEGIN
+				SET @ReturnCode = 1
+
+				INSERT INTO tblUsers(FirstName, LastName, Email, UserName, Password, Role)
+			VALUES (
+						@FirstName,
+						@LastName,
+						@Email,
+						@UserName,
+						@Password,
+						@Role
+					)
+			END
+
+			SELECT @ReturnCode AS ReturnValue
+END 
+
+GO
