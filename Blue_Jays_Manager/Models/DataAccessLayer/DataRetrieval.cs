@@ -7,9 +7,13 @@ using System.Web.Caching;
 using System.Data.SqlClient;
 using System.Data;
 using System.Configuration;
+using Oracle.ManagedDataAccess.Client;
 
 namespace Blue_Jays_Manager.Models.DataAccessLayer
 {
+    /// <summary>
+    /// This class retieves all data i.e. all select statements are placed within this class.
+    /// </summary>
     public class DataRetrieval
     {
         public List<PlayerRoster> SelectAllPlayers()
@@ -17,13 +21,13 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             List<PlayerRoster> roster = new List<PlayerRoster>();
             PlayerRoster playerRoster = null;
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("spSelectPlayerRoster", conn);
+                OracleCommand cmd = new OracleCommand("spSelectPlayerRoster", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+                OracleDataReader reader = cmd.ExecuteReader();
                 bool count = reader.HasRows;
 
                 while (reader.Read())
@@ -49,16 +53,16 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             List<PlayerBio> resultSet = new List<PlayerBio>();
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("spSelectPlayerBio", conn);
+                OracleCommand cmd = new OracleCommand("spSelectPlayerBio", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@PlayerNum", playerNum);
+                cmd.Parameters.Add("PlayerNum", playerNum);
 
                 conn.Open();
 
-                SqlDataReader reader = cmd.ExecuteReader();
+                OracleDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -84,16 +88,16 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             List<PlayerStatsSummary> resultSet = new List<PlayerStatsSummary>();
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("spSelectPlayerStatsSummary", conn);
+                OracleCommand cmd = new OracleCommand("spSelectPlayerStatsSummary", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@PlayerNum", playerNum);
+                cmd.Parameters.Add("PlayerNum", playerNum);
 
                 conn.Open();
 
-                SqlDataReader reader = cmd.ExecuteReader();
+                OracleDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -123,16 +127,16 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             List<PitchingStats> resultSet = new List<PitchingStats>();
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("spSelectPitchingStats", conn);
+                OracleCommand cmd = new OracleCommand("spSelectPitchingStats", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@PlayerNum", playerNum);
+                cmd.Parameters.Add("PlayerNum", playerNum);
 
                 conn.Open();
 
-                SqlDataReader reader = cmd.ExecuteReader();
+                OracleDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -176,16 +180,16 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             List<BattingStats> resultSet = new List<BattingStats>();
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("spSelectBattingStats", conn);
+                OracleCommand cmd = new OracleCommand("spSelectBattingStats", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@PlayerNum", playerNum);
+                cmd.Parameters.Add("PlayerNum", playerNum);
 
                 conn.Open();
 
-                SqlDataReader reader = cmd.ExecuteReader();
+                OracleDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -227,16 +231,16 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             List<FieldingStats> resultSet = new List<FieldingStats>();
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("spSelectFieldingStats", conn);
+                OracleCommand cmd = new OracleCommand("spSelectFieldingStats", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.AddWithValue("@PlayerNum", playerNum);
+                cmd.Parameters.Add("PlayerNum", playerNum);
 
                 conn.Open();
 
-                SqlDataReader reader = cmd.ExecuteReader();
+                OracleDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -274,14 +278,13 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             List<CoachRoster> roster = new List<CoachRoster>();
             CoachRoster coachRoster = null;
 
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand("spSelectCoachRoster", conn);
+                OracleCommand cmd = new OracleCommand("spSelectCoachRoster", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
-                int islocked;
 
                 conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
+                OracleDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
                 {
@@ -291,9 +294,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                         Position = reader["Position"].ToString(),
                         CoachNumber = Convert.ToInt32(reader["CoachNumber"]),
                         IsLocked = (reader["IsLocked"] != DBNull.Value) ? "Locked" : "Access"
-
                     };
-
                     roster.Add(coachRoster);
                 }
             }

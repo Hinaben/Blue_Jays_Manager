@@ -127,18 +127,18 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             OracleCommand cmd = new OracleCommand("spInsertIntoPlayerStatsSummary", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new OracleParameter("@playerStatsSummaryID", row["PlayerStatsSummaryID"]));
-            cmd.Parameters.Add(new OracleParameter("@playerNum", row["PlayerNum"]));
-            cmd.Parameters.Add(new OracleParameter("@summaryYear", row["1SS"]));
-            cmd.Parameters.Add(new OracleParameter("@wins", row["2SS"]));
-            cmd.Parameters.Add(new OracleParameter("@losses", row["3SS"]));
-            cmd.Parameters.Add(new OracleParameter("@earnedRunsAverage", row["4SS"]));
-            cmd.Parameters.Add(new OracleParameter("@games", row["5SS"]));
-            cmd.Parameters.Add(new OracleParameter("@gamesStarted", row["6SS"]));
-            cmd.Parameters.Add(new OracleParameter("@saves", row["7SS"]));
-            cmd.Parameters.Add(new OracleParameter("@inningsPitched", row["8SS"]));
-            cmd.Parameters.Add(new OracleParameter("@strikeOuts", row["9SS"]));
-            cmd.Parameters.Add(new OracleParameter("@walkAndHitsPerInningsPitched", row["10SS"]));
+            cmd.Parameters.Add(new OracleParameter("playerStatsSummaryID", row["PlayerStatsSummaryID"]));
+            cmd.Parameters.Add(new OracleParameter("playerNum", row["PlayerNum"]));
+            cmd.Parameters.Add(new OracleParameter("summaryYear", row["1SS"]));
+            cmd.Parameters.Add(new OracleParameter("wins", row["2SS"]));
+            cmd.Parameters.Add(new OracleParameter("losses", row["3SS"]));
+            cmd.Parameters.Add(new OracleParameter("earnedRunsAverage", row["4SS"]));
+            cmd.Parameters.Add(new OracleParameter("games", row["5SS"]));
+            cmd.Parameters.Add(new OracleParameter("gamesStarted", row["6SS"]));
+            cmd.Parameters.Add(new OracleParameter("saves", row["7SS"]));
+            cmd.Parameters.Add(new OracleParameter("inningsPitched", row["8SS"]));
+            cmd.Parameters.Add(new OracleParameter("strikeOuts", row["9SS"]));
+            cmd.Parameters.Add(new OracleParameter("walkAndHitsPerInningsPitched", row["10SS"]));
 
 
             cmd.ExecuteNonQuery();
@@ -148,25 +148,25 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             OracleCommand cmd = new OracleCommand("spInsertIntoFieldingStats", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new OracleParameter("@fieldingStatsID", row["FieldingStatsID"]));
-            cmd.Parameters.Add(new OracleParameter("@playerNum", row["PlayerNum"]));
-            cmd.Parameters.Add(new OracleParameter("@fieldStatYear", row["1F"]));
-            cmd.Parameters.Add(new OracleParameter("@team", row["2F"]));
-            cmd.Parameters.Add(new OracleParameter("@league", row["3F"]));
-            cmd.Parameters.Add(new OracleParameter("@position", row["4F"]));
-            cmd.Parameters.Add(new OracleParameter("@games", row["5F"]));
-            cmd.Parameters.Add(new OracleParameter("@gamesStarted", row["6F"]));
-            cmd.Parameters.Add(new OracleParameter("@inningsAtThisPosition", row["7F"]));
-            cmd.Parameters.Add(new OracleParameter("@totalChances", row["8F"]));
-            cmd.Parameters.Add(new OracleParameter("@putOuts", row["9F"]));
-            cmd.Parameters.Add(new OracleParameter("@assists", row["10F"]));
-            cmd.Parameters.Add(new OracleParameter("@errors", row["11F"]));
-            cmd.Parameters.Add(new OracleParameter("@doublePlays", row["12F"]));
-            cmd.Parameters.Add(new OracleParameter("@passedBall", row["13F"]));
-            cmd.Parameters.Add(new OracleParameter("@stolenBases", row["14F"]));
-            cmd.Parameters.Add(new OracleParameter("@caughtStealing", row["15F"]));
-            cmd.Parameters.Add(new OracleParameter("@rangeFactor", row["16F"]));
-            cmd.Parameters.Add(new OracleParameter("@fieldingPercentage", row["17F"]));
+            cmd.Parameters.Add(new OracleParameter("fieldingStatsID", row["FieldingStatsID"]));
+            cmd.Parameters.Add(new OracleParameter("playerNum", row["PlayerNum"]));
+            cmd.Parameters.Add(new OracleParameter("fieldStatYear", row["1F"]));
+            cmd.Parameters.Add(new OracleParameter("team", row["2F"]));
+            cmd.Parameters.Add(new OracleParameter("league", row["3F"]));
+            cmd.Parameters.Add(new OracleParameter("position", row["4F"]));
+            cmd.Parameters.Add(new OracleParameter("games", row["5F"]));
+            cmd.Parameters.Add(new OracleParameter("gamesStarted", row["6F"]));
+            cmd.Parameters.Add(new OracleParameter("inningsAtThisPosition", row["7F"]));
+            cmd.Parameters.Add(new OracleParameter("totalChances", row["8F"]));
+            cmd.Parameters.Add(new OracleParameter("putOuts", row["9F"]));
+            cmd.Parameters.Add(new OracleParameter("assists", row["10F"]));
+            cmd.Parameters.Add(new OracleParameter("errors", row["11F"]));
+            cmd.Parameters.Add(new OracleParameter("doublePlays", row["12F"]));
+            cmd.Parameters.Add(new OracleParameter("passedBall", row["13F"]));
+            cmd.Parameters.Add(new OracleParameter("stolenBases", row["14F"]));
+            cmd.Parameters.Add(new OracleParameter("caughtStealing", row["15F"]));
+            cmd.Parameters.Add(new OracleParameter("rangeFactor", row["16F"]));
+            cmd.Parameters.Add(new OracleParameter("fieldingPercentage", row["17F"]));
 
             cmd.ExecuteNonQuery();
         }
@@ -176,32 +176,32 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             OracleCommand cmd = new OracleCommand("spInsertIntoPitchingStats", conn);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add(new OracleParameter("@pitchingStatsID", row["PitchingStatsID"]));
-            cmd.Parameters.Add(new OracleParameter("@playerNum", row["PlayerNum"]));
-            cmd.Parameters.Add(new OracleParameter("@pitchStatYear", row["1P"]));
-            cmd.Parameters.Add(new OracleParameter("@team", row["2P"]));
-            cmd.Parameters.Add(new OracleParameter("@league", row["3P"]));
-            cmd.Parameters.Add(new OracleParameter("@wins", row["4P"]));
-            cmd.Parameters.Add(new OracleParameter("@losses", row["5P"]));
-            cmd.Parameters.Add(new OracleParameter("@earnedRunsAverage", row["6P"]));
-            cmd.Parameters.Add(new OracleParameter("@games", row["7P"]));
-            cmd.Parameters.Add(new OracleParameter("@gamesStarted", row["8P"]));
-            cmd.Parameters.Add(new OracleParameter("@completeGames", row["9P"]));
-            cmd.Parameters.Add(new OracleParameter("@shutOuts", row["10P"]));
-            cmd.Parameters.Add(new OracleParameter("@saves", row["11P"]));
-            cmd.Parameters.Add(new OracleParameter("@saveOpportunities", row["12P"]));
-            cmd.Parameters.Add(new OracleParameter("@inningsPitched", row["13P"]));
-            cmd.Parameters.Add(new OracleParameter("@hits", row["14P"]));
-            cmd.Parameters.Add(new OracleParameter("@runs", row["15P"]));
-            cmd.Parameters.Add(new OracleParameter("@earnedRuns", row["16P"]));
-            cmd.Parameters.Add(new OracleParameter("@homeRuns", row["17P"]));
-            cmd.Parameters.Add(new OracleParameter("@hitBatsmen", row["18P"]));
-            cmd.Parameters.Add(new OracleParameter("@basesOnBalls", row["19P"]));
-            cmd.Parameters.Add(new OracleParameter("@intentionalBasesOnBalls", row["20P"]));
-            cmd.Parameters.Add(new OracleParameter("@strikeOuts", row["21P"]));
-            cmd.Parameters.Add(new OracleParameter("@battingAverage", row["22P"]));
-            cmd.Parameters.Add(new OracleParameter("@walksAndHitsPerInningsPitched", row["23P"]));
-            cmd.Parameters.Add(new OracleParameter("@groundOrAirOuts", row["24P"]));
+            cmd.Parameters.Add(new OracleParameter("pitchingStatsID", row["PitchingStatsID"]));
+            cmd.Parameters.Add(new OracleParameter("playerNum", row["PlayerNum"]));
+            cmd.Parameters.Add(new OracleParameter("pitchStatYear", row["1P"]));
+            cmd.Parameters.Add(new OracleParameter("team", row["2P"]));
+            cmd.Parameters.Add(new OracleParameter("league", row["3P"]));
+            cmd.Parameters.Add(new OracleParameter("wins", row["4P"]));
+            cmd.Parameters.Add(new OracleParameter("losses", row["5P"]));
+            cmd.Parameters.Add(new OracleParameter("earnedRunsAverage", row["6P"]));
+            cmd.Parameters.Add(new OracleParameter("games", row["7P"]));
+            cmd.Parameters.Add(new OracleParameter("gamesStarted", row["8P"]));
+            cmd.Parameters.Add(new OracleParameter("completeGames", row["9P"]));
+            cmd.Parameters.Add(new OracleParameter("shutOuts", row["10P"]));
+            cmd.Parameters.Add(new OracleParameter("saves", row["11P"]));
+            cmd.Parameters.Add(new OracleParameter("saveOpportunities", row["12P"]));
+            cmd.Parameters.Add(new OracleParameter("inningsPitched", row["13P"]));
+            cmd.Parameters.Add(new OracleParameter("hits", row["14P"]));
+            cmd.Parameters.Add(new OracleParameter("runs", row["15P"]));
+            cmd.Parameters.Add(new OracleParameter("earnedRuns", row["16P"]));
+            cmd.Parameters.Add(new OracleParameter("homeRuns", row["17P"]));
+            cmd.Parameters.Add(new OracleParameter("hitBatsmen", row["18P"]));
+            cmd.Parameters.Add(new OracleParameter("basesOnBalls", row["19P"]));
+            cmd.Parameters.Add(new OracleParameter("intentionalBasesOnBalls", row["20P"]));
+            cmd.Parameters.Add(new OracleParameter("strikeOuts", row["21P"]));
+            cmd.Parameters.Add(new OracleParameter("battingAverage", row["22P"]));
+            cmd.Parameters.Add(new OracleParameter("walksAndHitsPerInningsPitched", row["23P"]));
+            cmd.Parameters.Add(new OracleParameter("groundOrAirOuts", row["24P"]));
 
             // ExecuteNonQuery used for UDI of data into tables
             cmd.ExecuteNonQuery();
@@ -211,14 +211,14 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             OracleCommand cmd = new OracleCommand("spInsertIntoPlayerRoster", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new OracleParameter("@playerID", row["PlayerID"]));
-            cmd.Parameters.Add(new OracleParameter("@playerNum", row["PlayerNum"]));
-            cmd.Parameters.Add(new OracleParameter("@name", row["Name"]));
-            cmd.Parameters.Add(new OracleParameter("@position", row["Position"]));
-            cmd.Parameters.Add(new OracleParameter("@height", row["Height"]));
-            cmd.Parameters.Add(new OracleParameter("@weight", row["Weight"]));
-            cmd.Parameters.Add(new OracleParameter("@skillOrientation", row["SkillOrientation"]));
-            cmd.Parameters.Add(new OracleParameter("@dateOfBirth", row["DateOfBirth"]));
+            cmd.Parameters.Add(new OracleParameter("playerID", row["PlayerID"]));
+            cmd.Parameters.Add(new OracleParameter("playerNum", row["PlayerNum"]));
+            cmd.Parameters.Add(new OracleParameter("name", row["Name"]));
+            cmd.Parameters.Add(new OracleParameter("position", row["Position"]));
+            cmd.Parameters.Add(new OracleParameter("height", row["Height"]));
+            cmd.Parameters.Add(new OracleParameter("weight", row["Weight"]));
+            cmd.Parameters.Add(new OracleParameter("skillOrientation", row["SkillOrientation"]));
+            cmd.Parameters.Add(new OracleParameter("dateOfBirth", row["DateOfBirth"]));
 
             cmd.ExecuteNonQuery();
         }
@@ -227,10 +227,10 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             OracleCommand cmd = new OracleCommand("spInsertIntoCoachRoster", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new OracleParameter("@coachID", row["CoachID"]));
-            cmd.Parameters.Add(new OracleParameter("@coachNumber", row["CoachNumber"]));
-            cmd.Parameters.Add(new OracleParameter("@name", row["Name"]));
-            cmd.Parameters.Add(new OracleParameter("@position", row["Position"]));
+            cmd.Parameters.Add(new OracleParameter("coachID", row["CoachID"]));
+            cmd.Parameters.Add(new OracleParameter("coachNumber", row["CoachNumber"]));
+            cmd.Parameters.Add(new OracleParameter("name", row["Name"]));
+            cmd.Parameters.Add(new OracleParameter("position", row["Position"]));
 
             cmd.ExecuteNonQuery();
         }
@@ -239,15 +239,15 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             OracleCommand cmd = new OracleCommand("spInsertIntoPlayerBio", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new OracleParameter("@playerBioID", row["PlayerBioID"]));
-            cmd.Parameters.Add(new OracleParameter("@playerNum", row["PlayerNum"]));
-            cmd.Parameters.Add(new OracleParameter("@name", row["Name"]));
-            cmd.Parameters.Add(new OracleParameter("@age", row["Age"]));
-            cmd.Parameters.Add(new OracleParameter("@born", row["Born"]));
-            cmd.Parameters.Add(new OracleParameter("@draft", row["Draft"]));
-            cmd.Parameters.Add(new OracleParameter("@highSchool", row["HighSchool"]));
-            cmd.Parameters.Add(new OracleParameter("@college", row["College"]));
-            cmd.Parameters.Add(new OracleParameter("@debut", row["Debut"]));
+            cmd.Parameters.Add(new OracleParameter("playerBioID", row["PlayerBioID"]));
+            cmd.Parameters.Add(new OracleParameter("playerNum", row["PlayerNum"]));
+            cmd.Parameters.Add(new OracleParameter("name", row["Name"]));
+            cmd.Parameters.Add(new OracleParameter("age", row["Age"]));
+            cmd.Parameters.Add(new OracleParameter("born", row["Born"]));
+            cmd.Parameters.Add(new OracleParameter("draft", row["Draft"]));
+            cmd.Parameters.Add(new OracleParameter("highSchool", row["HighSchool"]));
+            cmd.Parameters.Add(new OracleParameter("college", row["College"]));
+            cmd.Parameters.Add(new OracleParameter("debut", row["Debut"]));
 
 
             return cmd.ExecuteNonQuery();

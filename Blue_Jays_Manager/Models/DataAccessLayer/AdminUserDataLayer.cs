@@ -23,18 +23,17 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
                 string encryptedPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
 
-                cmd.Parameters.Add(new OracleParameter("@FirstName", firstName));
-                cmd.Parameters.Add(new OracleParameter("@LastName", lastName));
-                cmd.Parameters.Add(new OracleParameter("@Email", email));
-                cmd.Parameters.Add(new OracleParameter("@UserName", userName));
-                cmd.Parameters.Add(new OracleParameter("@Password", encryptedPassword));
-                cmd.Parameters.Add(new OracleParameter("@Role", role));
+                cmd.Parameters.Add(new OracleParameter("FirstName", firstName));
+                cmd.Parameters.Add(new OracleParameter("LastName", lastName));
+                cmd.Parameters.Add(new OracleParameter("Email", email));
+                cmd.Parameters.Add(new OracleParameter("UserName", userName));
+                cmd.Parameters.Add(new OracleParameter("Password", encryptedPassword));
+                cmd.Parameters.Add(new OracleParameter("Role", role));
 
                 conn.Open();
 
                 return (int)cmd.ExecuteScalar();
             }
-
         }
 
         public static object LogIn(string userName, string password)
@@ -48,8 +47,8 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
                 string ecryptedPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
 
-                cmd.Parameters.Add(new OracleParameter("@UserName", userName));
-                cmd.Parameters.Add(new OracleParameter("@Password", ecryptedPassword));
+                cmd.Parameters.Add(new OracleParameter("UserName", userName));
+                cmd.Parameters.Add(new OracleParameter("Password", ecryptedPassword));
 
                 con.Open();
 
@@ -98,13 +97,9 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                             message = "Invalid username or password";
                         }
                     }
-
                     return message;
                 }
-
-
             }
-
         }
 
         public static int EnableUserAccount(string firstName, string lastName)
@@ -118,14 +113,13 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
 
                 //This is new???...........message received after visual studio update 3 stating that mircosoft has deprecated "Add"
-                cmd.Parameters.Add("@FirstName", firstName);
-                cmd.Parameters.Add("@FirstName", firstName);
-                cmd.Parameters.Add("@LastName", lastName);
+                cmd.Parameters.Add("FirstName", firstName);
+                cmd.Parameters.Add("FirstName", firstName);
+                cmd.Parameters.Add("LastName", lastName);
 
                 con.Open();
 
                 rowAffected = cmd.ExecuteNonQuery();
-
             }
             return rowAffected;
         }
@@ -165,9 +159,9 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             int rowChanges = 0;
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("update tblUsers set Password = @Password where id = @Id", con);
-                cmd.Parameters.Add("@Password", newPassword);
-                cmd.Parameters.Add("@Id", id);
+                OracleCommand cmd = new OracleCommand("update tblUsers set Password = Password where id = @Id", con);
+                cmd.Parameters.Add("Password", newPassword);
+                cmd.Parameters.Add("Id", id);
 
                 con.Open();
 
@@ -185,7 +179,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
                 OracleCommand cmd = new OracleCommand("spResetPassword", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("@UserName", username);
+                cmd.Parameters.Add("UserName", username);
 
                 con.Open();
 
@@ -203,7 +197,6 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                     }
                 }
             }
-
             return success;
         }
         public static bool PasswordResetLinkValid(string uid)
@@ -215,7 +208,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
                 OracleCommand cmd = new OracleCommand("spIsPasswordResetLinkValid ", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("@GUID", uid);
+                cmd.Parameters.Add("GUID", uid);
 
                 con.Open();
 
@@ -235,8 +228,8 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
                 OracleCommand cmd = new OracleCommand("spChangePassword ", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("@GUID", uid);
-                cmd.Parameters.Add("@Password", password);
+                cmd.Parameters.Add("GUID", uid);
+                cmd.Parameters.Add("Password", password);
 
                 con.Open();
 
@@ -271,7 +264,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
                 OracleCommand cmd = new OracleCommand("spUsernameRequest ", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("@Email", email);
+                cmd.Parameters.Add("Email", email);
 
                 con.Open();
 
@@ -288,11 +281,8 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                     {
                         success = 2;
                     }
-
-                }
-               
+                }  
             }
-
             return success;
         }
     }
