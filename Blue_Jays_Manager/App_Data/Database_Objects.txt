@@ -88,22 +88,22 @@ CREATE TABLE PlayerBio(
 	PlayerNum number(8,3) NOT NULL,
 	Name varchar(30) NOT NULL,
 	Age number(8,3) NOT NULL,
-	Born varchar(30) NOT NULL,
-	Draft varchar(30) NULL,
-	HighSchool varchar(30) NULL,
+	Born varchar(55) NOT NULL,
+	Draft varchar(65) NULL,
+	HighSchool varchar(45) NULL,
 	College varchar(30) NULL,
-	Debut varchar(30) NOT NULL,
+	Debut varchar(35) NOT NULL,
   CONSTRAINT bio_pk PRIMARY KEY (PlayerBioID));
   
   CREATE TABLE PlayerRoster(
 	PlayerID number(8,3) NOT NULL,
-	PlayerNum number(8,3) NOT NULL,
+	PlayerNum number(10,3) NOT NULL,
 	Name varchar(30) NOT NULL,
 	Position nvarchar2(30) NOT NULL,
-	Height number(8,3) NOT NULL,
-	Weight number(8,3) NOT NULL,
+	Height number(10,3) NOT NULL,
+	Weight number(10,3) NOT NULL,
 	SkillOrientation varchar(30) NOT NULL,
-	DateOfBirth varchar2(30) NOT NULL,
+	DateOfBirth varchar2(45) NOT NULL,
   CONSTRAINT roster_pk PRIMARY KEY (PlayerID));
   
   CREATE TABLE PlayerStatsSummaries(
@@ -228,3 +228,303 @@ IS
       groundOrAIrOuts
     );
     END;
+
+
+create or replace procedure spInsertIntoCoachRoster
+(
+coachID COACHROSTER.COACHID%TYPE,
+coachNumber COACHROSTER.CoachNumber%TYPE,
+name COACHROSTER.Name%TYPE,
+position COACHROSTER.Position%TYPE
+)
+as
+	Begin
+
+		INSERT INTO CoachRoster
+           (CoachID,
+            CoachNumber
+           ,Name
+           ,Position)
+     VALUES
+           (coachID,
+            coachNumber,
+            name,
+            position);
+	End;
+
+
+create or replace PROCEDURE spInsertIntoFieldingStats
+(
+  fieldingStatsID FIELDINGSTATS.FIELDINGSTATSID%TYPE,
+  playerNum FIELDINGSTATS.PlayerNum%TYPE,
+  fieldStatYear FIELDINGSTATS.FieldStatYear%TYPE,
+  team FIELDINGSTATS.Team%TYPE,
+  league FIELDINGSTATS.League%TYPE,
+  position FIELDINGSTATS.Position%TYPE,
+  games FIELDINGSTATS.Games%TYPE,
+  gamesStarted FIELDINGSTATS.GamesStarted%TYPE,
+  inningsAtThisPosition FIELDINGSTATS.InningsAtThisPosition%TYPE,
+  totalChances FIELDINGSTATS.TotalChances%TYPE,
+  putOuts FIELDINGSTATS.Putouts%TYPE,
+  assists FIELDINGSTATS.Assists%TYPE,
+  errors FIELDINGSTATS.Errors%TYPE,
+  doublePlays FIELDINGSTATS.DoublePlays%TYPE,
+  passedBall FIELDINGSTATS.PassedBall%TYPE,
+  stolenBases FIELDINGSTATS.StolenBases%TYPE,
+  caughtStealing FIELDINGSTATS.CaughtStealing%TYPE,
+  rangeFactor FIELDINGSTATS.RangeFactor%TYPE,
+  fieldingPercentage FIELDINGSTATS.FieldingPercentage%TYPE
+)
+as
+	Begin
+
+		INSERT INTO FieldingStats
+           (FieldingStatsID,
+            PlayerNum
+           ,FieldStatYear
+           ,Team
+           ,League
+           ,Position
+           ,Games
+           ,GamesStarted
+           ,InningsAtThisPosition
+           ,TotalChances
+           ,Putouts
+           ,Assists
+           ,Errors
+           ,DoublePlays
+           ,PassedBall
+           ,StolenBases
+           ,CaughtStealing
+           ,RangeFactor
+           ,FieldingPercentage)
+     VALUES
+           (fieldingStatsID,
+            playerNum,
+            fieldStatYear,
+            team,
+            league,
+            position,
+            games,
+            gamesStarted,
+            inningsAtThisPosition,
+            totalChances,
+            putOuts,
+            assists,
+            errors,
+            doublePlays,
+            passedBall,
+            stolenBases,
+            caughtStealing ,
+            rangeFactor,
+            fieldingPercentage);
+	End;
+
+
+create or replace procedure spInsertIntoPitchingStats
+(
+  pitchingStatsID PITCHINGSTATS.PITCHINGSTATSID%TYPE,
+  playerNum PITCHINGSTATS.PlayerNum%TYPE,
+  pitchStatYear PITCHINGSTATS.PitchStatYear%TYPE,
+  team PITCHINGSTATS.Team%TYPE,
+  league PITCHINGSTATS.League%TYPE,
+  wins PITCHINGSTATS.Wins%TYPE,
+  losses PITCHINGSTATS.Losses%TYPE,
+  earnedRunsAverage PITCHINGSTATS.EarnedRunsAverage%TYPE,
+  games PITCHINGSTATS.Games%TYPE,
+  gamesStarted PITCHINGSTATS.GamesStarted%TYPE,
+  completeGames PITCHINGSTATS.CompleteGames%TYPE,
+  shutOuts PITCHINGSTATS.ShutOuts%TYPE,
+  saves PITCHINGSTATS.Saves%TYPE,
+  saveOpportunities PITCHINGSTATS.SaveOpportunities%TYPE,
+  inningsPitched PITCHINGSTATS.InningsPitched%TYPE,
+  hits PITCHINGSTATS.Hits%TYPE,
+  runs PITCHINGSTATS.Runs%TYPE,
+  earnedRuns PITCHINGSTATS.EarnedRuns%TYPE,
+  homeRuns PITCHINGSTATS.HomeRuns%TYPE,
+  hitBatsmen PITCHINGSTATS.HitBatsmen%TYPE,
+  basesOnBalls PITCHINGSTATS.BasesOnBalls%TYPE,
+  intentionalBasesOnBalls PITCHINGSTATS.IntentionalBasesOnBalls%TYPE,
+  strikeOuts PITCHINGSTATS.StrikeOuts%TYPE,
+  battingAverage PITCHINGSTATS.BattingAverage%TYPE,
+  walksAndHitsPerInningsPitched PITCHINGSTATS.WalksAndHitsPerInningsPitched%TYPE,
+  groundOrAirOuts PITCHINGSTATS.GroundOrAirOuts%TYPE
+)
+as 
+	Begin
+	
+		INSERT INTO PitchingStats
+           (PitchingStatsID,
+            PlayerNum
+           ,PitchStatYear
+           ,Team
+           ,League
+           ,Wins
+           ,Losses
+           ,EarnedRunsAverage
+           ,Games
+           ,GamesStarted
+           ,CompleteGames
+           ,ShutOuts
+           ,Saves
+           ,SaveOpportunities
+           ,InningsPitched
+           ,Hits
+            ,Runs
+           ,EarnedRuns
+           ,HomeRuns
+           ,HitBatsmen
+           ,BasesOnBalls
+           ,IntentionalBasesOnBalls
+           ,StrikeOuts
+           ,BattingAverage
+           ,WalksAndHitsPerInningsPitched
+           ,GroundOrAirOuts)
+     VALUES
+           (pitchingStatsID,
+            playerNum,
+            pitchStatYear,
+            team,
+            league,
+            wins,
+            losses,
+            earnedRunsAverage,
+            games,
+            gamesStarted,
+            completeGames,
+            shutOuts,
+            saves,
+            saveOpportunities,
+            inningsPitched,
+            hits,
+            runs,
+            earnedRuns,
+            homeRuns,
+            hitBatsmen,
+            basesOnBalls,
+            intentionalBasesOnBalls,
+            strikeOuts,
+            battingAverage,
+            walksAndHitsPerInningsPitched,
+            groundOrAirOuts);
+	End;
+
+
+create or replace procedure spInsertIntoPlayerBio
+(
+  playerBioID PLAYERBIO.PLAYERBIOID%TYPE,
+  playerNum PLAYERBIO.PlayerNum%TYPE,
+  name PLAYERBIO.Name%TYPE,
+  age PLAYERBIO.Age%TYPE,
+  born PLAYERBIO.Born%TYPE,
+  draft PLAYERBIO.Draft%TYPE,
+  highSchool PLAYERBIO.HighSchool%TYPE,
+  college PLAYERBIO.College%TYPE,
+  debut PLAYERBIO.Debut%TYPE
+)
+as
+	Begin
+
+		INSERT INTO PlayerBio
+           (PlayerBioID,
+            PlayerNum
+           ,Name
+           ,Age
+           ,Born
+           ,Draft
+           ,HighSchool
+           ,College
+           ,Debut)
+     VALUES
+           (playerBioID,
+			playerNum,
+			name,
+			age,
+			born,
+			draft,
+			highSchool,
+			college,
+			debut);
+	End;
+
+
+create or replace procedure spInsertIntoPlayerRoster
+(
+playerID PLAYERROSTER.PLAYERID%TYPE,
+playerNum PLAYERROSTER.PlayerNum%TYPE,
+name PLAYERROSTER.Name%TYPE,
+position PLAYERROSTER.Position%TYPE,
+height PLAYERROSTER.Height%TYPE,
+weight PLAYERROSTER.Weight%TYPE,
+skillOrientation PLAYERROSTER.SkillOrientation%TYPE,
+dateOfBirth PLAYERROSTER.DateOfBirth%TYPE
+)
+as
+	Begin
+
+		INSERT INTO PlayerRoster
+           (PLayerID,
+            PlayerNum
+           ,Name
+           ,Position
+           ,Height
+           ,Weight
+           ,SkillOrientation
+           ,DateOfBirth)
+     VALUES
+			( playerID,
+        playerNum,
+        name,
+        position,
+        height,
+        weight,
+        skillOrientation,
+        dateOfBirth);
+	End;
+
+
+create or replace procedure spInsertIntoPlayerStatsSummary
+(
+  playerStatsSummaryID PLAYERSTATSSUMMARIES.PLAYERSTATSSUMMARYID%TYPE,
+  playerNum PLAYERSTATSSUMMARIES.PlayerNum%TYPE,
+  summaryYear PLAYERSTATSSUMMARIES.SummaryYear%TYPE,
+  wins PLAYERSTATSSUMMARIES.Wins%TYPE,
+  losses PLAYERSTATSSUMMARIES.Losses%TYPE,
+  earnedRunsAverage PLAYERSTATSSUMMARIES.EarnedRunsAverage%TYPE,
+  games PLAYERSTATSSUMMARIES.Games%TYPE,
+  gamesStarted PLAYERSTATSSUMMARIES.GamesStarted%TYPE,
+  saves PLAYERSTATSSUMMARIES.Saves%TYPE,
+  inningsPitched PLAYERSTATSSUMMARIES.InningsPitched%TYPE,
+  strikeOuts PLAYERSTATSSUMMARIES.StrikeOuts%TYPE,
+  walkAndHitsPerInningsPitched PLAYERSTATSSUMMARIES.WalkAndHitsPerInningsPitched%TYPE
+)
+as
+	Begin
+	
+		INSERT INTO PlayerStatsSummaries
+           (PlayerStatsSummaryID,
+            PlayerNum
+           ,SummaryYear
+           ,Wins
+           ,Losses
+           ,EarnedRunsAverage
+           ,Games
+           ,GamesStarted
+           ,Saves
+           ,InningsPitched
+           ,StrikeOuts
+           ,WalkAndHitsPerInningsPitched)
+     VALUES
+           (playerStatsSummaryID,
+      playerNum,
+			summaryYear,
+			wins,
+			losses,
+			earnedRunsAverage,
+			games,
+			gamesStarted,
+			saves,
+			inningsPitched,
+			strikeOuts,
+      walkAndHitsPerInningsPitched);
+	End;
