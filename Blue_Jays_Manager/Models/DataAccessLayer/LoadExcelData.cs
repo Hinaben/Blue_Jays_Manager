@@ -96,31 +96,30 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             OracleCommand cmd = new OracleCommand("spInsertIntoBattingStats", conn);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add(new OracleParameter("@battingStatsID", row["BattingStatsID"]));
-            cmd.Parameters.Add(new OracleParameter("@playerNum", row["PlayerNum"]));
-            cmd.Parameters.Add(new OracleParameter("@batStatYear", row["1B"]));
-            cmd.Parameters.Add(new OracleParameter("@team", row["2B"]));
-            cmd.Parameters.Add(new OracleParameter("@league", row["3B"]));
-            cmd.Parameters.Add(new OracleParameter("@games", row["4B"]));
-            cmd.Parameters.Add(new OracleParameter("@atBats", row["5B"]));
-            cmd.Parameters.Add(new OracleParameter("@runs", row["6B"]));
-            cmd.Parameters.Add(new OracleParameter("@hits", row["7B"]));
-            cmd.Parameters.Add(new OracleParameter("@totalBases", row["8B"]));
-            cmd.Parameters.Add(new OracleParameter("@doubles", row["9B"]));
-            cmd.Parameters.Add(new OracleParameter("@triples", row["10B"]));
-            cmd.Parameters.Add(new OracleParameter("@homeRuns", row["11B"]));
-            cmd.Parameters.Add(new OracleParameter("@runsBattedIn", row["12B"]));
-            cmd.Parameters.Add(new OracleParameter("@basesOnBalls", row["13B"]));
-            cmd.Parameters.Add(new OracleParameter("@intentionalBasesOnBalls", row["14B"]));
-            cmd.Parameters.Add(new OracleParameter("@strikeouts", row["15B"]));
-            cmd.Parameters.Add(new OracleParameter("@stolenBases", row["16B"]));
-            cmd.Parameters.Add(new OracleParameter("@caughtStealing", row["17B"]));
-            cmd.Parameters.Add(new OracleParameter("@battingAverage", row["18B"]));
-            cmd.Parameters.Add(new OracleParameter("@onBasePercentage", row["19B"]));
-            cmd.Parameters.Add(new OracleParameter("@sluggingPercentage", row["20B"]));
-            cmd.Parameters.Add(new OracleParameter("@onBasePlusSlugging", row["21B"]));
-            cmd.Parameters.Add(new OracleParameter("@groundOrAirOuts", row["22B"]));
-
+            cmd.Parameters.Add(new OracleParameter("battingStatsID", row["BattingStatsID"]));
+            cmd.Parameters.Add(new OracleParameter("playerNum", row["PlayerNum"]));
+            cmd.Parameters.Add(new OracleParameter("batStatYear", row["1B"]));
+            cmd.Parameters.Add(new OracleParameter("team", row["2B"]));
+            cmd.Parameters.Add(new OracleParameter("league", row["3B"]));
+            cmd.Parameters.Add(new OracleParameter("games", row["4B"]));
+            cmd.Parameters.Add(new OracleParameter("atBats", row["5B"]));
+            cmd.Parameters.Add(new OracleParameter("runs", row["6B"]));
+            cmd.Parameters.Add(new OracleParameter("hits", row["7B"]));
+            cmd.Parameters.Add(new OracleParameter("totalBases", row["8B"]));
+            cmd.Parameters.Add(new OracleParameter("doubles", row["9B"]));
+            cmd.Parameters.Add(new OracleParameter("triples", row["10B"]));
+            cmd.Parameters.Add(new OracleParameter("homeRuns", row["11B"]));
+            cmd.Parameters.Add(new OracleParameter("runsBattedIn", row["12B"]));
+            cmd.Parameters.Add(new OracleParameter("basesOnBalls", row["13B"]));
+            cmd.Parameters.Add(new OracleParameter("intentionalBasesOnBalls", row["14B"]));
+            cmd.Parameters.Add(new OracleParameter("strikeouts", row["15B"]));
+            cmd.Parameters.Add(new OracleParameter("stolenBases", row["16B"]));
+            cmd.Parameters.Add(new OracleParameter("caughtStealing", row["17B"]));
+            cmd.Parameters.Add(new OracleParameter("battingAverage", row["18B"]));
+            cmd.Parameters.Add(new OracleParameter("onBasePercentage", row["19B"]));
+            cmd.Parameters.Add(new OracleParameter("sluggingPercentage", row["20B"]));
+            cmd.Parameters.Add(new OracleParameter("onBasePlusSlugging", row["21B"]));
+            cmd.Parameters.Add(new OracleParameter("groundOrAirOuts", row["22B"]));
             cmd.ExecuteNonQuery();
         }
 
