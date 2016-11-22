@@ -23,9 +23,8 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("spSelectPlayerRoster", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
+                OracleCommand cmd = new OracleCommand("SELECT * FROM PLAYERROSTER", conn);
+                cmd.CommandType = CommandType.Text;
                 conn.Open();
                 OracleDataReader reader = cmd.ExecuteReader();
                 bool count = reader.HasRows;
@@ -40,12 +39,13 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                     playerRoster.Height = Convert.ToInt32(reader["Height"]);
                     playerRoster.Weight = Convert.ToInt32(reader["Weight"]);
                     playerRoster.SkillOrientation = reader["SkillOrientation"].ToString();
-                    playerRoster.DateOfBirth = (reader["DateOfBirth"].ToString().Length > 12) ? reader["DateOfBirth"].ToString().Substring(0, reader["DateOfBirth"].ToString().IndexOf("12:00AM")) : reader["DateOfBirth"].ToString();
+                    playerRoster.DateOfBirth = (reader["DateOfBirth"].ToString().Length > 10) ? reader["DateOfBirth"].ToString().Substring(0, reader["DateOfBirth"].ToString().IndexOf("12.00.00.000000000 AM")) :reader["DateOfBirth"].ToString();
+
+                    // instead of making a decision on the string manipulation here, we can write a function in PL/SQL to strip "12.00.00.000000000 AM" and then return the rows.
 
                     roster.Add(playerRoster);
                 }
             }
-
             return roster;
         }
 
@@ -280,8 +280,11 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("spSelectCoachRoster", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
+
+                OracleCommand cmd = new OracleCommand(@"SELECT tblUsers.IsLocked, CoachRoster.Name, CoachRoster.Position,CoachRoster.CoachNumber 
+                  FROM CoachRoster Left Outer Join tblUsers ON SUBSTR(CoachRoster.Name, 0, INSTR(' ', CoachRoster.Name)) = tblUsers.FirstName AND SUBSTR(CoachRoster.Name, INSTR(' ', CoachRoster.Name) + 1, LENGTH(CoachRoster.Name)) = tblUsers.LastName", conn);
+
+                cmd.CommandType = CommandType.Text;
 
                 conn.Open();
                 OracleDataReader reader = cmd.ExecuteReader();

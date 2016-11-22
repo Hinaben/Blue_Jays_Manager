@@ -122,11 +122,11 @@ CREATE TABLE PlayerBio(
   CONSTRAINT stats_pk PRIMARY KEY (PlayerStatsSummaryID));
 
 CREATE TABLE tblExceptionLog(
-	Id NUMBER(8,3),
-	ExceptionDate date NULL,
-	ExceptionMessage varchar(30) NULL,
-	StackTrace varchar(30) NULL,
-  CONSTRAINT exception_pk PRIMARY KEY (Id));
+	Id  NUMBER GENERATED ALWAYS AS IDENTITY,
+	EXCEPTIONDATE DATE NOT NULL,
+	ExceptionMessage varchar(65) NOT NULL,
+	StackTrace varchar(65) NOT NULL
+);
 
 CREATE TABLE tblUsers(
 	Id NUMBER(8,3) NOT NULL,
@@ -528,3 +528,15 @@ as
 			strikeOuts,
       walkAndHitsPerInningsPitched);
 	End;
+
+
+Create OR REPLACE procedure spInsertException
+(
+  exceptionMessage TBLEXCEPTIONLOG.EXCEPTIONMESSAGE%TYPE,
+  stackTrace TBLEXCEPTIONLOG.STACKTRACE%TYPE
+)
+IS
+Begin
+      Insert into tblExceptionLog (EXCEPTIONDATE, ExceptionMessage, StackTrace)
+      Values( SYSDATE, exceptionMessage, stackTrace);
+end;

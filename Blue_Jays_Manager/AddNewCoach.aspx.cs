@@ -53,7 +53,7 @@ namespace Blue_Jays_Manager
                         CoachNumber = int.Parse(CoachNum.Text),
                         Name = FirstName.Text + " " + LastName.Text,
                         Position = pos.Text,
-                        IsLocked = "Access"
+                        //IsLocked = "Access"
                     }
                 );
 

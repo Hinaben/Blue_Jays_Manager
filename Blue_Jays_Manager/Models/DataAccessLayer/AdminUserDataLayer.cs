@@ -132,8 +132,8 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("spGetLockedUsers", con);
-                cmd.CommandType = CommandType.StoredProcedure;
+                OracleCommand cmd = new OracleCommand(@"select FirstName, LastName, UserName, Role, IsLocked, Email from tblUsers where IsLocked = 1", con);
+                cmd.CommandType = CommandType.Text;
                 con.Open();
 
                 OracleDataReader reader = cmd.ExecuteReader();
