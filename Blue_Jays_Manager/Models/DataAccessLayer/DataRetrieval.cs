@@ -21,6 +21,35 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             // To return all rows of a table in PL/SQL we will use ref cursor as an output parameter of a procedure
             // instead of making a decision on the string manipulation here, we can write a function in PL/SQL to strip "12.00.00.000000000 AM" and then return the rows.
 
+            //EXAMPLE: Stored procedure in database
+            //
+            //  PROCEDURE PRO_GET_MULTIPLE_ROWS
+            //  (
+            //      p_first OUT SYS_REFCURSOR,      
+            //  ) 
+            //  IS
+            //  BEGIN
+            //     OPEN p_ first FOR
+            //        select* from table_one;
+            //  END;
+            //
+            //
+            //
+            //This is the oracle C# code for the stored procedure above
+            //
+            //  OracleCommand cmd = new OracleCommand("MY_PACKAGE.PRO_GET_MULTIPLE", connection);
+  
+            //  cmd.CommandType = CommandType.StoredProcedure;
+
+            //  OracleParameter staffTypeResult = new OracleParameter();
+
+            //  staffTypeResult.ParameterName = "p_first";
+
+            //  staffTypeResult.OracleDbType = OracleDbType.RefCursor;
+
+            //  staffTypeResult.Direction = ParameterDirection.Output;
+            //////////////////////////////////////////////////////////////////////////////////////
+
             List<PlayerRoster> roster = new List<PlayerRoster>();
             PlayerRoster playerRoster = null;
 
@@ -295,6 +324,35 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         public List<CoachRoster> SelectAllCoaches()
         {
             // To return all rows of a table in PL/SQL we will use ref cursor as an output parameter of a procedure
+
+            //EXAMPLE: Stored procedure in database
+            //
+            //  PROCEDURE PRO_GET_MULTIPLE_ROWS
+            //  (
+            //      p_first OUT SYS_REFCURSOR,      
+            //  ) 
+            //  IS
+            //  BEGIN
+            //     OPEN p_ first FOR
+            //        select* from table_one;
+            //  END;
+            //
+            //
+            //
+            //This is the oracle C# code for the stored procedure above
+            //
+            //  OracleCommand cmd = new OracleCommand("MY_PACKAGE.PRO_GET_MULTIPLE", connection);
+
+            //  cmd.CommandType = CommandType.StoredProcedure;
+
+            //  OracleParameter staffTypeResult = new OracleParameter();
+
+            //  staffTypeResult.ParameterName = "p_first";
+
+            //  staffTypeResult.OracleDbType = OracleDbType.RefCursor;
+
+            //  staffTypeResult.Direction = ParameterDirection.Output;
+            //////////////////////////////////////////////////////////////////////////////////////
 
             List<CoachRoster> roster = new List<CoachRoster>();
             CoachRoster coachRoster = null;
