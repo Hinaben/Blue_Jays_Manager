@@ -18,6 +18,9 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
     {
         public List<PlayerRoster> SelectAllPlayers()
         {
+            // To return all rows of a table in PL/SQL we will use ref cursor as an output parameter of a procedure
+            // instead of making a decision on the string manipulation here, we can write a function in PL/SQL to strip "12.00.00.000000000 AM" and then return the rows.
+
             List<PlayerRoster> roster = new List<PlayerRoster>();
             PlayerRoster playerRoster = null;
 
@@ -41,7 +44,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                     playerRoster.SkillOrientation = reader["SkillOrientation"].ToString();
                     playerRoster.DateOfBirth = (reader["DateOfBirth"].ToString().Length > 10) ? reader["DateOfBirth"].ToString().Substring(0, reader["DateOfBirth"].ToString().IndexOf("12.00.00.000000000 AM")) :reader["DateOfBirth"].ToString();
 
-                    // instead of making a decision on the string manipulation here, we can write a function in PL/SQL to strip "12.00.00.000000000 AM" and then return the rows.
+                    
 
                     roster.Add(playerRoster);
                 }
@@ -51,6 +54,9 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
         public static List<PlayerBio> SelectPlayerBioWherePlayerNumEquals(int playerNum)
         {
+            //This table will need an index
+            //This table will or may return multiple rows...therefore a output ref cursor can be used 
+            
             List<PlayerBio> resultSet = new List<PlayerBio>();
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
@@ -86,6 +92,10 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
         public static List<PlayerStatsSummary> SelectPlayerStatsSummaryWherePlayerNumEquals(int playerNum)
         {
+            //This table will need an index
+            //This table will or may return multiple rows...therefore a output ref cursor can be used 
+
+
             List<PlayerStatsSummary> resultSet = new List<PlayerStatsSummary>();
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
@@ -125,6 +135,9 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
         public static List<PitchingStats> SelectPitchingStatsyWherePlayerNumEquals(int playerNum)
         {
+            //This table will need an index
+            //This table will or may return multiple rows...therefore a output ref cursor can be used 
+
             List<PitchingStats> resultSet = new List<PitchingStats>();
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
@@ -178,6 +191,9 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
         public static List<BattingStats> SelectBattingStatsyWherePlayerNumEquals(int playerNum)
         {
+            //This table will need an index
+            //This table will or may return multiple rows...therefore a output ref cursor can be used 
+
             List<BattingStats> resultSet = new List<BattingStats>();
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
@@ -229,6 +245,9 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
         public static List<FieldingStats> SelectFieldingStatsyWherePlayerNumEquals(int playerNum)
         {
+            //This table will need an index
+            //This table will or may return multiple rows...therefore a output ref cursor can be used 
+
             List<FieldingStats> resultSet = new List<FieldingStats>();
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
@@ -275,6 +294,8 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
         public List<CoachRoster> SelectAllCoaches()
         {
+            // To return all rows of a table in PL/SQL we will use ref cursor as an output parameter of a procedure
+
             List<CoachRoster> roster = new List<CoachRoster>();
             CoachRoster coachRoster = null;
 
