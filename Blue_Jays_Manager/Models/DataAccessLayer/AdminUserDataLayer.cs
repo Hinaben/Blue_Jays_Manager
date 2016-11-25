@@ -39,67 +39,66 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         public static object LogIn(string userName, string password)
         {
             AdminUser admin = null;
+            string message = String.Empty;
 
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("spAuthenticateUser", con);
+                OracleCommand cmd = new OracleCommand("AuthenticateUser_sp", con);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                string ecryptedPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
+                //string ecryptedPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
 
-                cmd.Parameters.Add(new OracleParameter("UserName", userName));
-                cmd.Parameters.Add(new OracleParameter("Password", ecryptedPassword));
+                cmd.Parameters.Add(new OracleParameter("username", OracleDbType.Varchar2, ParameterDirection.Input)).Value = userName;
+
+                cmd.Parameters.Add(new OracleParameter("password", OracleDbType.Varchar2, ParameterDirection.Input)).Value = password;
+
+                cmd.Parameters.Add(new OracleParameter("return_Val", OracleDbType.Varchar2, 300));
+                cmd.Parameters["return_Val"].Direction = ParameterDirection.Output;
 
                 con.Open();
 
-                OracleDataReader reader = cmd.ExecuteReader();
+                cmd.ExecuteNonQuery();
+
+                string[] retVal = cmd.Parameters["return_Val"].Value.ToString().Split(','); // read return value
 
 
-                if (reader.FieldCount > 3)
+                if (retVal.Length > 3)
 
                 {
                     admin = new AdminUser();
-                    while (reader.Read())
-                    {
-                        admin.Id = Convert.ToInt32(reader["Id"]);
-                        admin.FirstName = reader["FirstName"].ToString();
-                        admin.LastName = reader["LastName"].ToString();
-                        admin.Email = reader["Email"].ToString();
-                        admin.UserName = reader["UserName"].ToString();
-                        admin.Password = reader["Password"].ToString();
-                        admin.Role = reader["Role"].ToString();
-                    }
 
+                    admin.Id = Convert.ToInt32(retVal[0]);
+                    admin.FirstName = retVal[1].ToString();
+                    admin.LastName = retVal[2].ToString();
+                    admin.Email = retVal[3].ToString();
+                    admin.UserName = retVal[4].ToString();
+                    admin.Password = retVal[5].ToString();
+                    admin.Role = retVal[6].ToString();
                     return admin;
                 }
                 else
                 {
-                    int col = reader.FieldCount;
+                    int col = retVal.Length;
 
-                    string message = String.Empty;
+                    int attempts = Convert.ToInt32(retVal[2]);
 
-                    while (reader.Read())
+                    if (retVal[0] == " 1")
                     {
-                        int attempts = Convert.ToInt32(reader["RetryAttempts"]);
-
-                        if (Convert.ToBoolean(reader["AccountLocked"]))
-                        {
-                            message = "Account Locked. Please Contact Administrator";
-                        }
-                        else if (attempts > 0)
-                        {
-                            int attemptsLeft = (4 - attempts);
-
-                            message = "Invalid username or password. " + attemptsLeft.ToString() + " attempts remaining";
-                        }
-                        else
-                        {
-                            message = "Invalid username or password";
-                        }
+                        message = "Account Locked. Please Contact Administrator";
                     }
-                    return message;
+                    else if (attempts > 0)
+                    {
+                        int attemptsLeft = (4 - attempts);
+
+                        message = "Invalid username or password. " + attemptsLeft.ToString() + " attempts remaining";
+                    }
+                    else
+                    {
+                        message = "Invalid username or password";
+                    }
                 }
             }
+                return message; 
         }
 
         public static int EnableUserAccount(string firstName, string lastName)

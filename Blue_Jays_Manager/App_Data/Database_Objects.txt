@@ -540,3 +540,146 @@ Begin
       Insert into tblExceptionLog (EXCEPTIONDATE, ExceptionMessage, StackTrace)
       Values( SYSDATE, exceptionMessage, stackTrace);
 end;
+
+----- 11-24-2016-----------
+create or replace PROCEDURE AuthenticateUser_sp
+(
+  c_username IN VARCHAR,
+  c_password IN VARCHAR,
+  return_Val OUT VARCHAR2
+)
+IS
+  AccountLocked VARCHAR2(30);
+  usercount NUMBER;
+  retryCount NUMBER;
+  RetryAttempts VARCHAR2(30);
+  TYPE rec_type IS RECORD
+  (
+    u_id TBLUSERS.ID%TYPE,
+    f_name TBLUSERS.FIRSTNAME%TYPE,
+    l_name TBLUSERS.LASTNAME%TYPE,
+    e_mail TBLUSERS.EMAIL%TYPE,
+    user_name TBLUSERS.USERNAME%TYPE,
+    pass_word TBLUSERS.PASSWORD%TYPE,
+    u_role TBLUSERS.ROLE%TYPE
+  );
+  authUser rec_type;
+BEGIN
+  --checked to see if account is locked
+  SELECT TO_CHAR(IsLocked)
+  INTO AccountLocked
+  FROM TBLUSERS
+  WHERE TBLUSERS.USERNAME = c_username;
+  
+   -- Check if the username and password match
+  countUsername(c_username, c_password, usercount);
+  
+  --retrieve number of attemps
+  SELECT NVL(TO_CHAR(TBLUSERS.ATTEMPTS), '0')
+  INTO RetryAttempts
+  FROM TBLUSERS
+  where TBLUSERS.USERNAME = c_username;
+  
+   --If the account is already locked
+  IF AccountLocked = '1' THEN
+
+    return_Val := TO_CHAR(100, '9,9,9');
+    
+      -- If match found
+  ELSIF usercount = 1 THEN
+    -- Reset RetryAttempts 
+    spUpdateTblUsersAttempts(0, c_username);
+    
+    --data to be returned to calling application
+    SELECT TBLUSERS.Id, TBLUSERS.FIRSTNAME, TBLUSERS.LASTNAME, TBLUSERS.EMAIL, TBLUSERS.USERNAME, TBLUSERS.PASSWORD, TBLUSERS.ROLE 
+    INTO authUser.u_id, authUser.f_name,authUser.l_name,authUser.e_mail,authUser.user_name,authUser.pass_word,authUser.u_role
+    FROM tblUsers
+    WHERE TBLUSERS.USERNAME = c_username;
+    
+    return_Val := authUser.u_id || ','||authUser.f_name|| ','||authUser.l_name|| ','||authUser.e_mail|| ','||authUser.user_name|| ','||authUser.pass_word|| ','||authUser.u_role;
+    
+    -- If a match is not found
+  ELSE
+  --increment attempts
+    RetryAttempts := TO_CHAR( IncreaseAttempts(RetryAttempts));
+    
+    --if attempts is less that allowed amount
+    IF RetryAttempts < '4' THEN
+    
+    --update attempts again
+      spUpdateTblUsersAttempts(TO_NUMBER(RetryAttempts), c_username);
+      
+      return_Val := TO_CHAR(CONCAT(0||0,RetryAttempts), '0,0,9');
+    
+    -- If re-try attempts are maxed
+    ELSE
+      spUpdateTblUsers(TO_NUMBER(RetryAttempts), 1, SYSDATE, c_username);
+      
+      return_Val := TO_CHAR(100, '9,9,9');
+
+    END IF;
+  END IF;
+END;
+
+
+create or replace procedure countUsername
+  (
+    username IN VARCHAR2,
+    gpassword IN VARCHAR2,
+    count OUT NUMBER
+  )
+  AS
+  begin
+    select COUNT(TBLUSERS.USERNAME)
+    INTO count
+    FROM TBLUSERS
+    WHERE TBLUSERS.USERNAME = username and  TBLUSERS.PASSWORD = gpassword;
+    end;
+
+create or replace procedure spUpdateTblUsersAttempts
+(
+  uattempts IN TBLUSERS.Attempts%TYPE,
+  cusername IN TBLUSERS.USERNAME%TYPE
+)
+IS
+BEGIN
+  UPDATE TBLUSERS
+  SET TBLUSERS.ATTEMPTS = uattempts
+  WHERE TBLUSERS.USERNAME = cusername;
+  COMMIT;
+END;
+
+
+create or replace procedure spUpdateTblUsers
+(
+  c_attempts IN TBLUSERS.Attempts%TYPE,
+  c_isLocked IN TBLUSERS.ISLOCKED%TYPE,
+  c_lockDate IN TBLUSERS.LOCKEDDATE%TYPE,
+  c_username IN TBLUSERS.USERNAME%TYPE
+)
+IS
+BEGIN
+  UPDATE TBLUSERS
+  SET TBLUSERS.ATTEMPTS = c_attempts, TBLUSERS.ISLOCKED = c_isLocked, TBLUSERS.LOCKEDDATE = c_lockDate
+  WHERE TBLUSERS.USERNAME = c_username;
+  COMMIT;
+END;
+
+
+create or replace function IncreaseAttempts
+(
+  retry_attempts IN VARCHAR2
+)
+RETURN VARCHAR2
+IS
+  retry_count NUMBER(3,0);
+  final_calc VARCHAR2(3);
+BEGIN
+
+  retry_count := TO_NUMBER(retry_attempts);
+    final_calc := TO_CHAR(retry_count + 1);
+
+RETURN final_calc;
+END;
+
+

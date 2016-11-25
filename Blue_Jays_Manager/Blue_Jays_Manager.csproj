@@ -118,7 +118,6 @@
     <Content Include="ErrorPage.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Images\banner.jpg" />
-    <Content Include="Images\Blue_Jays_2015.jpg" />
     <Content Include="Images\Coaches\16.jpg" />
     <Content Include="Images\Coaches\26.jpg" />
     <Content Include="Images\Coaches\34.jpg" />
@@ -130,14 +129,7 @@
     <Content Include="Images\Coaches\61.jpg" />
     <Content Include="Images\Coaches\63.jpg" />
     <Content Include="Images\favicon.ico" />
-    <Content Include="Images\footerblue.jpeg" />
     <Content Include="Images\jayswordlogo.png" />
-    <Content Include="Images\Jays_Carousel\banner.jpg" />
-    <Content Include="Images\Jays_Carousel\jays1.jpg" />
-    <Content Include="Images\Jays_Carousel\jays2.jpg" />
-    <Content Include="Images\Jays_Carousel\jays3.jpg" />
-    <Content Include="Images\Jays_Carousel\jays4.jpg" />
-    <Content Include="Images\Jays_Carousel\jays5.jpg" />
     <Content Include="Images\logotrans.png" />
     <Content Include="Images\Photo-Unavailable.jpg" />
     <Content Include="Images\PlayerProfilePic\10.jpg" />
@@ -215,6 +207,7 @@
     <Content Include="Scripts\BlueJays.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\test-five - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
