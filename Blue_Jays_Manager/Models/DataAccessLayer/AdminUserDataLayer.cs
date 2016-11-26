@@ -18,7 +18,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("spRegisterUser", conn);
+                OracleCommand cmd = new OracleCommand("registerUser_sp", conn);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
                 string encryptedPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
@@ -29,10 +29,15 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                 cmd.Parameters.Add(new OracleParameter("UserName", userName));
                 cmd.Parameters.Add(new OracleParameter("Password", encryptedPassword));
                 cmd.Parameters.Add(new OracleParameter("Role", role));
-
+                cmd.Parameters.Add(new OracleParameter("u_exists", OracleDbType.Int16));
+                cmd.Parameters["u_exists"].Direction = ParameterDirection.Output;
                 conn.Open();
 
-                return (int)cmd.ExecuteScalar();
+                cmd.ExecuteNonQuery();
+
+                string retVal = cmd.Parameters["u_exists"].Value.ToString();
+                int convert_Val = Convert.ToInt16(retVal);
+                return convert_Val;
             }
         }
 
@@ -46,11 +51,11 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                 OracleCommand cmd = new OracleCommand("AuthenticateUser_sp", con);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                //string ecryptedPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
+                string encryptedPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(password, "SHA1");
 
                 cmd.Parameters.Add(new OracleParameter("username", OracleDbType.Varchar2, ParameterDirection.Input)).Value = userName;
 
-                cmd.Parameters.Add(new OracleParameter("password", OracleDbType.Varchar2, ParameterDirection.Input)).Value = password;
+                cmd.Parameters.Add(new OracleParameter("password", OracleDbType.Varchar2, ParameterDirection.Input)).Value =encryptedPassword ;
 
                 cmd.Parameters.Add(new OracleParameter("return_Val", OracleDbType.Varchar2, 300));
                 cmd.Parameters["return_Val"].Direction = ParameterDirection.Output;
@@ -176,25 +181,30 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
 
-                OracleCommand cmd = new OracleCommand("spResetPassword", con);
+                OracleCommand cmd = new OracleCommand("resetPassword_sp", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("UserName", username);
+
+                cmd.Parameters.Add(new OracleParameter("user_name", OracleDbType.Varchar2, ParameterDirection.Input)).Value = username;
+
+                cmd.Parameters.Add(new OracleParameter("return_Val", OracleDbType.Varchar2, 300));
+                cmd.Parameters["return_Val"].Direction = ParameterDirection.Output;
 
                 con.Open();
 
-                OracleDataReader reader = cmd.ExecuteReader();
+                cmd.ExecuteNonQuery();
 
-                while (reader.Read())
-                {
-                    if (Convert.ToBoolean(reader["ReturnCode"]))
+                string [] reVal = cmd.Parameters["return_Val"].Value.ToString().Split(','); // read return value
+
+                
+                    if (reVal[0] == "1")
                     {
-                        success = Email.SendPasswordResetEmail(reader["Email"].ToString(), reader["FirstName"].ToString(), reader["LastName"].ToString(), reader["UniqueId"].ToString());
+                        success = Email.SendPasswordResetEmail(reVal[2].ToString(), reVal[3].ToString(), reVal[4].ToString(), reVal[1].ToString());
                     }
                     else
                     {
                         success = 2;
                     }
-                }
+                
             }
             return success;
         }

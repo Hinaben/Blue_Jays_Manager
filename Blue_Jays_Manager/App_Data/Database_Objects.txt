@@ -682,4 +682,93 @@ BEGIN
 RETURN final_calc;
 END;
 
+----------------------11/25/2016--------------------------
+
+create or replace PROCEDURE registerUser_sp
+(
+  first_name IN TBLUSERS.FIRSTNAME%TYPE,
+  last_name IN TBLUSERS.LASTNAME%TYPE,
+  user_email IN TBLUSERS.EMAIL%TYPE,
+  user_name IN TBLUSERS.USERNAME%TYPE,
+  pass_word IN TBLUSERS.PASSWORD%TYPE,
+  user_role IN TBLUSERS.ROLE%TYPE,
+  u_exists OUT NUMBER
+)
+IS
+  userCount NUMBER(3,0);
+  u_email NUMBER(3,0);
+BEGIN
+  SELECT COUNT(USERNAME), COUNT(TBLUSERS.EMAIL)
+  INTO userCount, u_email
+  FROM TBLUSERS
+  WHERE USERNAME = user_name;
+  
+  IF userCount > 0 THEN
+    u_exists := -1;
+  ELSIF u_email > 0 THEN
+    u_exists := -2;
+  ELSE
+    INSERT INTO TBLUSERS
+    (
+      ID,
+      FIRSTNAME,
+      LASTNAME,
+      EMAIL,
+      USERNAME,
+      PASSWORD,
+      ROLE
+    )
+    VALUES
+    (
+      user_id_seq.NEXTVAL,
+      first_name,
+      last_name,
+      user_email,
+      user_name,
+      pass_word,
+      user_role
+    );
+    COMMIT;
+    u_exists := 1;
+  END IF;
+END;
+
+
+create or replace PROCEDURE resetPassword_sp
+(
+  user_name TBLUSERS.USERNAME%TYPE,
+  user_details OUT VARCHAR2
+)
+IS
+  TYPE rec_type IS RECORD
+  (
+    user_id TBLUSERS.USERID%TYPE,
+    user_email TBLUSERS.EMAIL%TYPE,
+    first_name TBLUSERS.FIRSTNAME%TYPE,
+    last_name TBLUSERS.LASTNAME%TYPE
+  );
+  u_record rec_type;
+BEGIN
+   --if username exists
+   SELECT USERID, EMAIL, FIRSTNAME, LASTNAME
+   INTO u_record.user_id, u_record.user_email, u_record.first_name, u_record.last_name
+   FROM TBLUSERS
+   WHERE USERNAME = user_name;
+   
+   IF u_record.user_id IS NULL THEN
+    u_record.user_id := sys_guid();
+    UPDATE tblusers
+    SET userid = u_record.user_id
+    WHERE USERNAME = user_name;
+    COMMIT;
+    
+    user_details := '1' || ',' || u_record.user_id || ',' || u_record.user_email || ',' || u_record.first_name || ',' || u_record.last_name;
+  
+  ELSE
+     user_details := '0';
+  END IF;
+END;
+
+
+
 
