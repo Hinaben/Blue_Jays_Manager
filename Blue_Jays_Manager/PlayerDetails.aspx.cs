@@ -308,7 +308,5 @@ namespace Blue_Jays_Manager
 
             return age;
         }
-
-
     }
 }

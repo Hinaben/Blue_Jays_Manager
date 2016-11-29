@@ -181,49 +181,56 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
 
-                OracleCommand cmd = new OracleCommand("resetPassword_sp", con);
+                OracleCommand cmd = new OracleCommand("resetPasswordRequest_sp", con);
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 cmd.Parameters.Add(new OracleParameter("user_name", OracleDbType.Varchar2, ParameterDirection.Input)).Value = username;
 
-                cmd.Parameters.Add(new OracleParameter("return_Val", OracleDbType.Varchar2, 300));
-                cmd.Parameters["return_Val"].Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(new OracleParameter("user_details", OracleDbType.Varchar2, 300));
+                cmd.Parameters["user_details"].Direction = ParameterDirection.Output;
 
                 con.Open();
 
                 cmd.ExecuteNonQuery();
 
-                string [] reVal = cmd.Parameters["return_Val"].Value.ToString().Split(','); // read return value
+                string [] reVal = cmd.Parameters["user_details"].Value.ToString().Split(','); // read return value
 
                 
-                    if (reVal[0] == "1")
-                    {
-                        success = Email.SendPasswordResetEmail(reVal[2].ToString(), reVal[3].ToString(), reVal[4].ToString(), reVal[1].ToString());
-                    }
-                    else
-                    {
-                        success = 2;
-                    }
-                
+                if (reVal[0] == "1")
+                {
+                    success = Email.SendPasswordResetEmail(reVal[2].ToString(), reVal[3].ToString(), reVal[4].ToString(), reVal[1].ToString());
+                }
+                else if (reVal[0] == "8")
+                {
+                    success = 2;
+                }
+                else
+                {
+                    success = 3;
+                }
             }
             return success;
         }
         public static bool PasswordResetLinkValid(string uid)
         {
-            bool valid = false;
+            string val = null;
+            int valid = 0;
 
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
 
-                OracleCommand cmd = new OracleCommand("spIsPasswordResetLinkValid ", con);
+                OracleCommand cmd = new OracleCommand("isPasswordResetLinkValid_sp", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("GUID", uid);
+                cmd.Parameters.Add(new OracleParameter("user_guid", OracleDbType.Varchar2, ParameterDirection.Input)).Value = uid;
+                cmd.Parameters.Add(new OracleParameter("return_val", OracleDbType.Int16));
+                cmd.Parameters["return_val"].Direction = ParameterDirection.Output;
 
                 con.Open();
-
-                valid = Convert.ToBoolean(cmd.ExecuteScalar());
+                cmd.ExecuteNonQuery();
+                val = cmd.Parameters["return_val"].Value.ToString();
+                valid = Convert.ToInt16(val);
             }
-            return valid;
+            return Convert.ToBoolean(valid);
         }
 
         public static string[] ResetPassword(string uid, string password)
@@ -235,25 +242,21 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
 
-                OracleCommand cmd = new OracleCommand("spChangePassword ", con);
+                OracleCommand cmd = new OracleCommand("changePassword_sp ", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("GUID", uid);
-                cmd.Parameters.Add("Password", password);
+                cmd.Parameters.Add(new OracleParameter("user_guid", OracleDbType.Varchar2, ParameterDirection.Input)).Value = uid;
+                cmd.Parameters.Add(new OracleParameter("pass_word", OracleDbType.Varchar2, ParameterDirection.Input)).Value = password;
+                cmd.Parameters.Add(new OracleParameter("return_val", OracleDbType.Varchar2, 300));
+                cmd.Parameters["return_val"].Direction = ParameterDirection.Output;
 
                 con.Open();
 
-                OracleDataReader reader = cmd.ExecuteReader();
+                cmd.ExecuteNonQuery();
 
-                if (reader.FieldCount > 1)
+                values = cmd.Parameters["return_val"].Value.ToString().Split(',');
+
+                if (values.Length > 1)
                 {
-                    while (reader.Read())
-                    {
-                        values[0] = reader["FirstName"].ToString();
-                        values[1] = reader["LastName"].ToString();
-                        values[2] = reader["Email"].ToString();
-                        values[3] = reader["UserName"].ToString();
-                    }
-
                     return values;
                 }
                 else
