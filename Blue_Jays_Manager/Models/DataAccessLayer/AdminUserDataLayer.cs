@@ -163,13 +163,20 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             int rowChanges = 0;
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("update tblUsers set Password = Password where id = @Id", con);
-                cmd.Parameters.Add("Password", newPassword);
-                cmd.Parameters.Add("Id", id);
+                OracleCommand cmd = new OracleCommand("changeUserPassword_sp", con);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.Add(new OracleParameter("user_id", OracleDbType.Varchar2, ParameterDirection.Input)).Value = id;
+                cmd.Parameters.Add(new OracleParameter("pass_word", OracleDbType.Varchar2, ParameterDirection.Input)).Value = newPassword;
+
+                cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2));
+                cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
 
                 con.Open();
 
-                rowChanges = cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
+
+                string retVal = cmd.Parameters["retVal"].Value.ToString();
+                int.TryParse(retVal, out rowChanges);
             }
 
             return rowChanges;
@@ -274,26 +281,27 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
 
-                OracleCommand cmd = new OracleCommand("spUsernameRequest ", con);
+                OracleCommand cmd = new OracleCommand("usernameRequest_sp ", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.Add("Email", email);
+
+                cmd.Parameters.Add(new OracleParameter("u_email", OracleDbType.Varchar2, ParameterDirection.Input)).Value = email;
+
+                cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 300));
+                cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
 
                 con.Open();
+                cmd.ExecuteNonQuery();
 
-                OracleDataReader reader = cmd.ExecuteReader();
+                string[] values = cmd.Parameters["retVal"].Value.ToString().Split(',');
 
-                while (reader.Read())
-                {
-
-                    if (Convert.ToBoolean(reader["ReturnCode"]))
+                    if (values[0] == "1")
                     {
-                        success = Email.SendUserNameEmail(email, reader["FirstName"].ToString(), reader["LastName"].ToString(), reader["UserName"].ToString());
+                        success = Email.SendUserNameEmail(email, values[2].ToString(), values[3].ToString(), values[1].ToString());
                     }
                     else
                     {
                         success = 2;
-                    }
-                }  
+                    }    
             }
             return success;
         }

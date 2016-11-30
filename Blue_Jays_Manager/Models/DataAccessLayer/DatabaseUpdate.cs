@@ -45,7 +45,6 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
         {
             OracleCommand cmd = new OracleCommand("spInsertIntoPlayerRoster", con);
             cmd.CommandType = CommandType.StoredProcedure;
-
             cmd.Parameters.Add(new OracleParameter("playerID", i));
             cmd.Parameters.Add(new OracleParameter("playerNum", p.PlayerNum));
             cmd.Parameters.Add(new OracleParameter("name", p.Name));
@@ -54,6 +53,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             cmd.Parameters.Add(new OracleParameter("weight", p.Weight));
             cmd.Parameters.Add(new OracleParameter("skillOrientation", p.SkillOrientation));
             cmd.Parameters.Add(new OracleParameter("dateOfBirth", p.DateOfBirth));
+
             return cmd.ExecuteNonQuery();
         }
 
