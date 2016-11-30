@@ -777,6 +777,143 @@ NOMAXVALUE
 NOCYCLE
 CACHE 20;
 
+---------------11-30-2016----------------------------
+
+create or replace PROCEDURE changePassword_sp
+(
+  user_guid IN VARCHAR2,
+  pass_word IN VARCHAR2,
+  return_val OUT VARCHAR2
+)
+IS
+  TYPE rec_type IS RECORD
+  (
+    fName TBLUSERS.FIRSTNAME%TYPE,
+    lName TBLUSERS.LASTNAME%TYPE,
+    u_email TBLUSERS.EMAIL%TYPE
+  );
+  u_record rec_type;
+  user_name VARCHAR2(30);
+BEGIN
+  SELECT USERNAME, FIRSTNAME, LASTNAME, EMAIL
+  INTO user_name, u_record.fName, u_record.lName, u_record.u_email
+  FROM TBLUSERS
+  WHERE userid = user_guid;
+  
+  IF user_name IS NULL THEN
+    return_val := '0';
+  ELSE
+    UPDATE TBLUSERS
+    SET PASSWORD = pass_word
+    WHERE USERNAME = user_name;
+    
+    UPDATE TBLUSERS
+    SET USERID = NULL
+    WHERE USERNAME = user_name;
+    COMMIT;
+    return_val := u_record.fName||','||u_record.lName||','||u_record.u_email||','||user_name;
+  END IF;
+END;
+
+create or replace PROCEDURE changeUserPassword_sp
+(
+  user_id IN TBLUSERS.ID%TYPE,
+  pass_word IN TBLUSERS.PASSWORD%TYPE,
+  retVal OUT VARCHAR2
+)
+IS
+BEGIN
+  UPDATE TBLUSERS
+  SET PASSWORD = pass_word
+  WHERE ID = user_id;
+  retVal := '1';
+  COMMIT;
+END;
+
+create or replace PROCEDURE isPasswordResetLinkValid_sp
+(
+  user_guid IN VARCHAR2,
+  return_val OUT NUMBER
+)
+IS
+user_name VARCHAR2(30);
+BEGIN
+  SELECT USERNAME
+  INTO user_name
+  FROM TBLUSERS
+  WHERE USERID = user_guid;
+  
+  IF user_name IS NULL THEN
+    return_val := 0;
+  ELSE
+    return_val := 1;
+  END IF;
+END;
+
+create or replace PROCEDURE resetPasswordRequest_sp
+(
+  user_name TBLUSERS.USERNAME%TYPE,
+  user_details OUT VARCHAR2
+)
+IS
+  TYPE rec_type IS RECORD
+  (
+    user_id TBLUSERS.USERID%TYPE,
+    user_email TBLUSERS.EMAIL%TYPE,
+    first_name TBLUSERS.FIRSTNAME%TYPE,
+    last_name TBLUSERS.LASTNAME%TYPE
+  );
+  u_record rec_type;
+BEGIN
+   --if username exists
+   SELECT USERID, EMAIL, FIRSTNAME, LASTNAME
+   INTO u_record.user_id, u_record.user_email, u_record.first_name, u_record.last_name
+   FROM TBLUSERS
+   WHERE USERNAME = user_name;
+   
+   IF u_record.user_id IS NULL THEN
+    u_record.user_id := sys_guid();
+    UPDATE tblusers
+    SET userid = u_record.user_id
+    WHERE USERNAME = user_name;
+    COMMIT;
+    
+    user_details := '1' || ',' || u_record.user_id || ',' || u_record.user_email || ',' || u_record.first_name || ',' || u_record.last_name;
+  
+  ELSE
+     user_details := '1';
+  END IF;
+END;
 
 
-
+create or replace PROCEDURE usernameRequest_sp
+(
+  u_email IN TBLUSERS.EMAIL%TYPE,
+  retVal OUT VARCHAR2
+)
+IS
+  TYPE rec_type IS RECORD
+  (
+    fName TBLUSERS.FIRSTNAME%TYPE,
+    lName TBLUSERS.LASTNAME%TYPE,
+    user_name TBLUSERS.USERNAME%TYPE
+  );
+  u_record rec_type;
+  num_user NUMBER(3,0);
+BEGIN
+  SELECT COUNT(USERNAME)
+  INTO num_user
+  FROM TBLUSERS
+  WHERE EMAIL = u_email;
+  
+  IF num_user > 0 THEN
+    SELECT USERNAME, FIRSTNAME, LASTNAME
+    INTO u_record.user_name, u_record.fName, u_record.lName
+    FROM TBLUSERS
+    WHERE EMAIL = u_email;
+    
+    retVal := '1'||','||u_record.user_name||','||u_record.fName||','||u_record.lName;
+  ELSE
+    retVal := '9';
+  END IF;
+END;
