@@ -93,7 +93,14 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             cmd.Parameters.Add(new OracleParameter("name", c.Name));
             cmd.Parameters.Add(new OracleParameter("position", c.Position));
 
-            return cmd.ExecuteNonQuery();
+            cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 30));
+            cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
+
+            cmd.ExecuteNonQuery();
+
+            string ret_val = cmd.Parameters["retVal"].Value.ToString();
+            int val = Convert.ToInt32(ret_val);
+            return val;
         }
     }
 }

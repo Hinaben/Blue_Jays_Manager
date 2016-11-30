@@ -168,7 +168,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                 cmd.Parameters.Add(new OracleParameter("user_id", OracleDbType.Varchar2, ParameterDirection.Input)).Value = id;
                 cmd.Parameters.Add(new OracleParameter("pass_word", OracleDbType.Varchar2, ParameterDirection.Input)).Value = newPassword;
 
-                cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2));
+                cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2,30));
                 cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
 
                 con.Open();
