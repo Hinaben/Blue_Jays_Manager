@@ -9,6 +9,7 @@ using Blue_Jays_Manager.Models.DataModels;
 using System.Data;
 using Blue_Jays_Manager.Models.Correspondence;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 
 namespace Blue_Jays_Manager.Models.DataAccessLayer
 {
@@ -117,13 +118,20 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
 
                 //This is new???...........message received after visual studio update 3 stating that mircosoft has deprecated "Add"
-                cmd.Parameters.Add("FirstName", firstName);
-                cmd.Parameters.Add("FirstName", firstName);
-                cmd.Parameters.Add("LastName", lastName);
+                cmd.Parameters.Add(new OracleParameter("first_name", OracleDbType.Varchar2, ParameterDirection.Input)).Value = firstName;
+                cmd.Parameters.Add(new OracleParameter("last_name", OracleDbType.Varchar2, ParameterDirection.Input)).Value = lastName;
+
+                cmd.Parameters.Add(new OracleParameter("affected_row", OracleDbType.Varchar2, 30));
+                cmd.Parameters["affected_row"].Direction = ParameterDirection.Output;
+
 
                 con.Open();
 
-                rowAffected = cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
+
+                string retVal = cmd.Parameters["affected_row"].Value.ToString();
+                int.TryParse(retVal, out rowAffected);
+
             }
             return rowAffected;
         }
@@ -136,11 +144,16 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand(@"select FirstName, LastName, UserName, Role, IsLocked, Email from tblUsers where IsLocked = 1", con);
-                cmd.CommandType = CommandType.Text;
+                OracleCommand cmd = new OracleCommand("getLockedUserss_sp", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new OracleParameter("ref_cur", OracleDbType.RefCursor));
+                cmd.Parameters["ref_cur"].Direction = ParameterDirection.Output;
+
                 con.Open();
 
-                OracleDataReader reader = cmd.ExecuteReader();
+                cmd.ExecuteNonQuery();
+
+                OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["ref_cur"].Value).GetDataReader();
 
                 while (reader.Read())
                 {
