@@ -47,7 +47,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                     playerRoster.Height = Convert.ToInt32(reader["Height"]);
                     playerRoster.Weight = Convert.ToInt32(reader["Weight"]);
                     playerRoster.SkillOrientation = reader["SkillOrientation"].ToString();
-                    playerRoster.DateOfBirth = (reader["DateOfBirth"].ToString().Length > 10) ? reader["DateOfBirth"].ToString().Substring(0, reader["DateOfBirth"].ToString().IndexOf("12.00.00.000000000 AM")) :reader["DateOfBirth"].ToString();
+                    playerRoster.DateOfBirth = (reader["DateOfBirth"].ToString().Length > 9) ? reader["DateOfBirth"].ToString().Substring(0, reader["DateOfBirth"].ToString().IndexOf("00.00.00.000000000 AM")) :reader["DateOfBirth"].ToString();
 
                     
 
