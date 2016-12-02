@@ -682,4 +682,387 @@ BEGIN
 RETURN final_calc;
 END;
 
+----------------------11/25/2016--------------------------
 
+create or replace PROCEDURE registerUser_sp
+(
+  first_name IN TBLUSERS.FIRSTNAME%TYPE,
+  last_name IN TBLUSERS.LASTNAME%TYPE,
+  user_email IN TBLUSERS.EMAIL%TYPE,
+  user_name IN TBLUSERS.USERNAME%TYPE,
+  pass_word IN TBLUSERS.PASSWORD%TYPE,
+  user_role IN TBLUSERS.ROLE%TYPE,
+  u_exists OUT NUMBER
+)
+IS
+  userCount NUMBER(3,0);
+  u_email NUMBER(3,0);
+BEGIN
+  SELECT COUNT(USERNAME), COUNT(TBLUSERS.EMAIL)
+  INTO userCount, u_email
+  FROM TBLUSERS
+  WHERE USERNAME = user_name;
+  
+  IF userCount > 0 THEN
+    u_exists := -1;
+  ELSIF u_email > 0 THEN
+    u_exists := -2;
+  ELSE
+    INSERT INTO TBLUSERS
+    (
+      ID,
+      FIRSTNAME,
+      LASTNAME,
+      EMAIL,
+      USERNAME,
+      PASSWORD,
+      ROLE
+    )
+    VALUES
+    (
+      user_id_seq.NEXTVAL,
+      first_name,
+      last_name,
+      user_email,
+      user_name,
+      pass_word,
+      user_role
+    );
+    COMMIT;
+    u_exists := 1;
+  END IF;
+END;
+
+
+create or replace PROCEDURE resetPassword_sp
+(
+  user_name TBLUSERS.USERNAME%TYPE,
+  user_details OUT VARCHAR2
+)
+IS
+  TYPE rec_type IS RECORD
+  (
+    user_id TBLUSERS.USERID%TYPE,
+    user_email TBLUSERS.EMAIL%TYPE,
+    first_name TBLUSERS.FIRSTNAME%TYPE,
+    last_name TBLUSERS.LASTNAME%TYPE
+  );
+  u_record rec_type;
+BEGIN
+   --if username exists
+   SELECT USERID, EMAIL, FIRSTNAME, LASTNAME
+   INTO u_record.user_id, u_record.user_email, u_record.first_name, u_record.last_name
+   FROM TBLUSERS
+   WHERE USERNAME = user_name;
+   
+   IF u_record.user_id IS NULL THEN
+    u_record.user_id := sys_guid();
+    UPDATE tblusers
+    SET userid = u_record.user_id
+    WHERE USERNAME = user_name;
+    COMMIT;
+    
+    user_details := '1' || ',' || u_record.user_id || ',' || u_record.user_email || ',' || u_record.first_name || ',' || u_record.last_name;
+  
+  ELSE
+     user_details := '0';
+  END IF;
+END;
+
+
+CREATE SEQUENCE user_id_seq
+INCREMENT BY 1
+START WITH 2
+NOMAXVALUE
+NOCYCLE
+CACHE 20;
+
+---------------11-30-2016----------------------------
+
+create or replace PROCEDURE changePassword_sp
+(
+  user_guid IN VARCHAR2,
+  pass_word IN VARCHAR2,
+  return_val OUT VARCHAR2
+)
+IS
+  TYPE rec_type IS RECORD
+  (
+    fName TBLUSERS.FIRSTNAME%TYPE,
+    lName TBLUSERS.LASTNAME%TYPE,
+    u_email TBLUSERS.EMAIL%TYPE
+  );
+  u_record rec_type;
+  user_name VARCHAR2(30);
+BEGIN
+  SELECT USERNAME, FIRSTNAME, LASTNAME, EMAIL
+  INTO user_name, u_record.fName, u_record.lName, u_record.u_email
+  FROM TBLUSERS
+  WHERE userid = user_guid;
+  
+  IF user_name IS NULL THEN
+    return_val := '0';
+  ELSE
+    UPDATE TBLUSERS
+    SET PASSWORD = pass_word
+    WHERE USERNAME = user_name;
+    
+    UPDATE TBLUSERS
+    SET USERID = NULL
+    WHERE USERNAME = user_name;
+    COMMIT;
+    return_val := u_record.fName||','||u_record.lName||','||u_record.u_email||','||user_name;
+  END IF;
+END;
+
+create or replace PROCEDURE changeUserPassword_sp
+(
+  user_id IN TBLUSERS.ID%TYPE,
+  pass_word IN TBLUSERS.PASSWORD%TYPE,
+  retVal OUT VARCHAR2
+)
+IS
+BEGIN
+  UPDATE TBLUSERS
+  SET PASSWORD = pass_word
+  WHERE ID = user_id;
+  retVal := '1';
+  COMMIT;
+END;
+
+create or replace PROCEDURE isPasswordResetLinkValid_sp
+(
+  user_guid IN VARCHAR2,
+  return_val OUT NUMBER
+)
+IS
+user_name VARCHAR2(30);
+BEGIN
+  SELECT USERNAME
+  INTO user_name
+  FROM TBLUSERS
+  WHERE USERID = user_guid;
+  
+  IF user_name IS NULL THEN
+    return_val := 0;
+  ELSE
+    return_val := 1;
+  END IF;
+END;
+
+create or replace PROCEDURE resetPasswordRequest_sp
+(
+  user_name TBLUSERS.USERNAME%TYPE,
+  user_details OUT VARCHAR2
+)
+IS
+  TYPE rec_type IS RECORD
+  (
+    user_id TBLUSERS.USERID%TYPE,
+    user_email TBLUSERS.EMAIL%TYPE,
+    first_name TBLUSERS.FIRSTNAME%TYPE,
+    last_name TBLUSERS.LASTNAME%TYPE
+  );
+  u_record rec_type;
+BEGIN
+   --if username exists
+   SELECT USERID, EMAIL, FIRSTNAME, LASTNAME
+   INTO u_record.user_id, u_record.user_email, u_record.first_name, u_record.last_name
+   FROM TBLUSERS
+   WHERE USERNAME = user_name;
+   
+   IF u_record.user_id IS NULL THEN
+    u_record.user_id := sys_guid();
+    UPDATE tblusers
+    SET userid = u_record.user_id
+    WHERE USERNAME = user_name;
+    COMMIT;
+    
+    user_details := '1' || ',' || u_record.user_id || ',' || u_record.user_email || ',' || u_record.first_name || ',' || u_record.last_name;
+  
+  ELSE
+     user_details := '1';
+  END IF;
+END;
+
+
+create or replace PROCEDURE usernameRequest_sp
+(
+  u_email IN TBLUSERS.EMAIL%TYPE,
+  retVal OUT VARCHAR2
+)
+IS
+  TYPE rec_type IS RECORD
+  (
+    fName TBLUSERS.FIRSTNAME%TYPE,
+    lName TBLUSERS.LASTNAME%TYPE,
+    user_name TBLUSERS.USERNAME%TYPE
+  );
+  u_record rec_type;
+  num_user NUMBER(3,0);
+BEGIN
+  SELECT COUNT(USERNAME)
+  INTO num_user
+  FROM TBLUSERS
+  WHERE EMAIL = u_email;
+  
+  IF num_user > 0 THEN
+    SELECT USERNAME, FIRSTNAME, LASTNAME
+    INTO u_record.user_name, u_record.fName, u_record.lName
+    FROM TBLUSERS
+    WHERE EMAIL = u_email;
+    
+    retVal := '1'||','||u_record.user_name||','||u_record.fName||','||u_record.lName;
+  ELSE
+    retVal := '9';
+  END IF;
+END;
+
+------------------------------12-01-2016----------------------------------------
+
+create or replace PROCEDURE getLockedUserss_sp
+(
+ref_cur OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+  OPEN ref_cur FOR
+    select FirstName, LastName, UserName, Role, IsLocked, Email from tblUsers where IsLocked = 1;
+END;
+
+create or replace PROCEDURE selectAllCoaches_sp(
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT CoachRoster.Name, CoachRoster.Position, CoachRoster.CoachNumber, 
+        (SELECT tblUsers.ISLOCKED FROM tblUsers WHERE CONCAT(CONCAT(tblUsers.FIRSTNAME, ' '), tblUsers.LASTNAME) = CoachRoster.Name) AS "IsLocked"
+        FROM CoachRoster; 
+END;
+
+
+create or replace PROCEDURE selectAllPlayers_sp(
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM PLAYERROSTER;
+END;
+
+
+create or replace PROCEDURE selectBattingStats_sp
+(
+  player_num IN BATTINGSTATS.PLAYERNUM%TYPE,
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM BATTINGSTATS
+    WHERE PLAYERNUM = player_num
+    ORDER BY BATSTATYEAR;
+END;
+
+
+create or replace PROCEDURE selectFieldingStats_sp
+(
+  player_num IN FIELDINGSTATS.PLAYERNUM%TYPE,
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM FIELDINGSTATS
+    WHERE PLAYERNUM = player_num
+    ORDER BY FIELDSTATYEAR;
+END;
+
+
+create or replace PROCEDURE selectPitchingStats_sp
+(
+  player_num IN PITCHINGSTATS.PLAYERNUM%TYPE,
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM PITCHINGSTATS
+    WHERE PLAYERNUM = player_num
+    ORDER BY PITCHSTATYEAR;
+END;
+
+
+create or replace PROCEDURE selectPlayerBio_sp(
+  player_num IN PLAYERBIO.PLAYERNUM%TYPE,
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM PLAYERBIO
+    WHERE PLAYERNUM = player_num;
+END;
+
+
+create or replace PROCEDURE selectPlayerStatsSummary_sp
+(
+  player_num IN PLAYERSTATSSUMMARIES.PLAYERNUM%TYPE,
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM PLAYERSTATSSUMMARIES
+    WHERE PLAYERNUM = player_num
+    ORDER BY SUMMARYYEAR;
+END;
+
+
+create or replace procedure spEnableAdminUser
+(
+  first_name TBLUSERS.FIRSTNAME%TYPE,
+  last_name TBLUSERS.LASTNAME%TYPE,
+  affected_row OUT VARCHAR2
+)
+as
+Begin
+  Update tblUsers
+  set Attempts = 0, IsLocked = Null, LockedDate = Null
+  where FirstName = first_name and LastName = last_name;
+  
+  affected_row := TO_CHAR(sql%rowcount);
+End;
+
+
+create or replace PROCEDURE spSelectPlayerRoster
+  (
+    player_roster out sys_refcursor
+  )
+   is
+   begin
+     open player_roster for
+       select PLayerID,
+            PlayerNum
+           ,Name
+           ,Position
+           ,Height
+           ,Weight
+           ,SkillOrientation
+           ,DateOfBirth
+        from PLAYERROSTER;
+end;

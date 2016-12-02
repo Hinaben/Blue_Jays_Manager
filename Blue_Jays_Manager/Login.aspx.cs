@@ -36,12 +36,9 @@ namespace Blue_Jays_Manager
                         Password.Attributes["value"] = getCookie["password"];
                         checkboxRemeber.Checked = true;
                     }
-
                 }
             }
         }
-
-
         protected void BtnLogin_Click(object sender, EventArgs e)
         {
             var user = AdminUserDataLayer.LogIn(UserName.Text, Password.Text);

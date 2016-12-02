@@ -49,9 +49,14 @@ namespace Blue_Jays_Manager
                         ConfirmLbl.Text = "Email has been sent to reset password";
                         ConfirmLbl.ForeColor = System.Drawing.Color.Green;
                     }
-                    else
+                    else if(success == 2)
                     {
                         ConfirmLbl.Text = "Username could not be found";
+                        ConfirmLbl.ForeColor = System.Drawing.Color.Red;
+                    }
+                    else
+                    {
+                        ConfirmLbl.Text = "Reset password link has already been sent to your email.";
                         ConfirmLbl.ForeColor = System.Drawing.Color.Red;
                     }
                 }

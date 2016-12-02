@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Configuration;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 
 namespace Blue_Jays_Manager.Models.DataAccessLayer
 {
@@ -18,47 +19,22 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
     {
         public List<PlayerRoster> SelectAllPlayers()
         {
-            // To return all rows of a table in PL/SQL we will use ref cursor as an output parameter of a procedure
-            // instead of making a decision on the string manipulation here, we can write a function in PL/SQL to strip "12.00.00.000000000 AM" and then return the rows.
-
-            //EXAMPLE: Stored procedure in database
-            //
-            //  PROCEDURE PRO_GET_MULTIPLE_ROWS
-            //  (
-            //      p_first OUT SYS_REFCURSOR,      
-            //  ) 
-            //  IS
-            //  BEGIN
-            //     OPEN p_ first FOR
-            //        select* from table_one;
-            //  END;
-            //
-            //
-            //
-            //This is the oracle C# code for the stored procedure above
-            //
-            //  OracleCommand cmd = new OracleCommand("MY_PACKAGE.PRO_GET_MULTIPLE", connection);
-  
-            //  cmd.CommandType = CommandType.StoredProcedure;
-
-            //  OracleParameter staffTypeResult = new OracleParameter();
-
-            //  staffTypeResult.ParameterName = "p_first";
-
-            //  staffTypeResult.OracleDbType = OracleDbType.RefCursor;
-
-            //  staffTypeResult.Direction = ParameterDirection.Output;
-            //////////////////////////////////////////////////////////////////////////////////////
 
             List<PlayerRoster> roster = new List<PlayerRoster>();
             PlayerRoster playerRoster = null;
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("SELECT * FROM PLAYERROSTER", conn);
-                cmd.CommandType = CommandType.Text;
+                OracleCommand cmd = new OracleCommand("selectAllPlayers_sp", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new OracleParameter("ref_cur", OracleDbType.RefCursor));
+                cmd.Parameters["ref_cur"].Direction = ParameterDirection.Output;
+
                 conn.Open();
-                OracleDataReader reader = cmd.ExecuteReader();
+
+                cmd.ExecuteNonQuery();
+
+                OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["ref_cur"].Value).GetDataReader();
                 bool count = reader.HasRows;
 
                 while (reader.Read())
@@ -90,14 +66,18 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("spSelectPlayerBio", conn);
+                OracleCommand cmd = new OracleCommand("selectPlayerBio_sp", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.Add("PlayerNum", playerNum);
+                cmd.Parameters.Add(new OracleParameter("player_num", OracleDbType.Int32, ParameterDirection.Input)).Value = playerNum;
+                cmd.Parameters.Add(new OracleParameter("ref_cur", OracleDbType.RefCursor));
+                cmd.Parameters["ref_cur"].Direction = ParameterDirection.Output;
 
                 conn.Open();
 
-                OracleDataReader reader = cmd.ExecuteReader();
+                cmd.ExecuteNonQuery();
+
+                OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["ref_cur"].Value).GetDataReader();
 
                 while (reader.Read())
                 {
@@ -111,7 +91,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                             Draft = reader["Draft"].ToString(),
                             HighSchool = reader["HighSchool"].ToString(),
                             College = reader["College"].ToString(),
-                            Debut = reader["Debut"].ToString().Substring(0, reader["Debut"].ToString().IndexOf("12:00AM")),
+                            Debut = reader["Debut"].ToString().Substring(0, reader["Debut"].ToString().IndexOf("12.00.00.000000000 AM")),
                         }
                     );
                 }
@@ -129,14 +109,18 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("spSelectPlayerStatsSummary", conn);
+                OracleCommand cmd = new OracleCommand("selectPlayerStatsSummary_sp", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.Add("PlayerNum", playerNum);
+                cmd.Parameters.Add(new OracleParameter("player_num", OracleDbType.Int32, ParameterDirection.Input)).Value = playerNum;
+                cmd.Parameters.Add(new OracleParameter("ref_cur", OracleDbType.RefCursor));
+                cmd.Parameters["ref_cur"].Direction = ParameterDirection.Output;
 
                 conn.Open();
 
-                OracleDataReader reader = cmd.ExecuteReader();
+                cmd.ExecuteNonQuery();
+
+                OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["ref_cur"].Value).GetDataReader();
 
                 while (reader.Read())
                 {
@@ -171,14 +155,18 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("spSelectPitchingStats", conn);
+                OracleCommand cmd = new OracleCommand("selectPitchingStats_sp", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.Add("PlayerNum", playerNum);
+                cmd.Parameters.Add(new OracleParameter("player_num", OracleDbType.Int32, ParameterDirection.Input)).Value = playerNum;
+                cmd.Parameters.Add(new OracleParameter("ref_cur", OracleDbType.RefCursor));
+                cmd.Parameters["ref_cur"].Direction = ParameterDirection.Output;
 
                 conn.Open();
 
-                OracleDataReader reader = cmd.ExecuteReader();
+                cmd.ExecuteNonQuery();
+
+                OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["ref_cur"].Value).GetDataReader();
 
                 while (reader.Read())
                 {
@@ -227,14 +215,18 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("spSelectBattingStats", conn);
+                OracleCommand cmd = new OracleCommand("selectBattingStats_sp", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.Add("PlayerNum", playerNum);
+                cmd.Parameters.Add(new OracleParameter("player_num", OracleDbType.Int32, ParameterDirection.Input)).Value = playerNum;
+                cmd.Parameters.Add(new OracleParameter("ref_cur", OracleDbType.RefCursor));
+                cmd.Parameters["ref_cur"].Direction = ParameterDirection.Output;
 
                 conn.Open();
 
-                OracleDataReader reader = cmd.ExecuteReader();
+                cmd.ExecuteNonQuery();
+
+                OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["ref_cur"].Value).GetDataReader();
 
                 while (reader.Read())
                 {
@@ -281,14 +273,18 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = new OracleCommand("spSelectFieldingStats", conn);
+                OracleCommand cmd = new OracleCommand("selectFieldingStats_sp", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
-                cmd.Parameters.Add("PlayerNum", playerNum);
+                cmd.Parameters.Add(new OracleParameter("player-num", OracleDbType.Int32, ParameterDirection.Input)).Value = playerNum;
+                cmd.Parameters.Add(new OracleParameter("ref_cur", OracleDbType.RefCursor));
+                cmd.Parameters["ref_cur"].Direction = ParameterDirection.Output;
 
                 conn.Open();
 
-                OracleDataReader reader = cmd.ExecuteReader();
+                cmd.ExecuteNonQuery();
+
+                OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["ref_cur"].Value).GetDataReader();
 
                 while (reader.Read())
                 {
@@ -323,36 +319,6 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
 
         public List<CoachRoster> SelectAllCoaches()
         {
-            // To return all rows of a table in PL/SQL we will use ref cursor as an output parameter of a procedure
-
-            //EXAMPLE: Stored procedure in database
-            //
-            //  PROCEDURE PRO_GET_MULTIPLE_ROWS
-            //  (
-            //      p_first OUT SYS_REFCURSOR,      
-            //  ) 
-            //  IS
-            //  BEGIN
-            //     OPEN p_ first FOR
-            //        select* from table_one;
-            //  END;
-            //
-            //
-            //
-            //This is the oracle C# code for the stored procedure above
-            //
-            //  OracleCommand cmd = new OracleCommand("MY_PACKAGE.PRO_GET_MULTIPLE", connection);
-
-            //  cmd.CommandType = CommandType.StoredProcedure;
-
-            //  OracleParameter staffTypeResult = new OracleParameter();
-
-            //  staffTypeResult.ParameterName = "p_first";
-
-            //  staffTypeResult.OracleDbType = OracleDbType.RefCursor;
-
-            //  staffTypeResult.Direction = ParameterDirection.Output;
-            //////////////////////////////////////////////////////////////////////////////////////
 
             List<CoachRoster> roster = new List<CoachRoster>();
             CoachRoster coachRoster = null;
@@ -360,13 +326,18 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             using (OracleConnection conn = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
 
-                OracleCommand cmd = new OracleCommand(@"SELECT tblUsers.IsLocked, CoachRoster.Name, CoachRoster.Position,CoachRoster.CoachNumber 
-                  FROM CoachRoster Left Outer Join tblUsers ON SUBSTR(CoachRoster.Name, 0, INSTR(' ', CoachRoster.Name)) = tblUsers.FirstName AND SUBSTR(CoachRoster.Name, INSTR(' ', CoachRoster.Name) + 1, LENGTH(CoachRoster.Name)) = tblUsers.LastName", conn);
+                OracleCommand cmd = new OracleCommand("selectAllCoaches_sp", conn);
 
-                cmd.CommandType = CommandType.Text;
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new OracleParameter("ref_cur", OracleDbType.RefCursor));
+                cmd.Parameters["ref_cur"].Direction = ParameterDirection.Output;
 
                 conn.Open();
-                OracleDataReader reader = cmd.ExecuteReader();
+
+                cmd.ExecuteNonQuery();
+
+                OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["ref_cur"].Value).GetDataReader();
 
                 while (reader.Read())
                 {

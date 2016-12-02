@@ -3,8 +3,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container-fluid" style="padding-bottom: 10px">
 
-        <div class="col-md-4"></div>
-        <div class="col-md-4 container registerView">
+        <div class="col-md-2"></div>
+        <div class="col-md-6 container registerView">
 
             <div id="addPlayerFormDiv" class="form-horizontal" style="margin-right: 30px;">
                 <div class="page-header" style="margin-bottom: 5px">

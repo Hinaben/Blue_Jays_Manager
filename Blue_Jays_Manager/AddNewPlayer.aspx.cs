@@ -154,11 +154,12 @@ namespace Blue_Jays_Manager
                         Weight = int.Parse(playerWeight.Text),
                         DateOfBirth = monthName + " " +
                         dobDayDropDownList.SelectedValue + " " + dobYearDropDownList.SelectedValue,
-                        SkillOrientation = playerBattingHand + "/" + playerThrowingHand
+                        SkillOrientation = playerBattingHand.Text + "/" + playerThrowingHand.Text
                     }
                 );
 
                 Cache["PlayerRoster"] = playerRoster;
+                Session["PlayerChanges"] = true;
 
                 Server.Transfer("Players.aspx");
             }
@@ -167,7 +168,6 @@ namespace Blue_Jays_Manager
             {
                 PlayerExists.Text = "There is already an existing player with the number " + PlayerNum.Text + "!";
             }
-
         }
     }
 }

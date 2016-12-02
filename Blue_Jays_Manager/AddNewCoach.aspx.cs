@@ -33,6 +33,7 @@ namespace Blue_Jays_Manager
         protected void AddCoachButton_Click(object sender, EventArgs e)
         {
             bool existCoach = false;
+            coachRoster = (List<CoachRoster>)Cache["CoachRoster"];
 
             foreach (CoachRoster coach in coachRoster)
             {
@@ -53,12 +54,12 @@ namespace Blue_Jays_Manager
                         CoachNumber = int.Parse(CoachNum.Text),
                         Name = FirstName.Text + " " + LastName.Text,
                         Position = pos.Text,
-                        //IsLocked = "Access"
+                        IsLocked = "Access"
                     }
                 );
 
                 Cache["CoachRoster"] = coachRoster;
-
+                Session["CoachChanges"] = true;
                 Server.Transfer("Coaches.aspx");
             }
 

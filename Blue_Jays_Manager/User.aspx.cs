@@ -19,17 +19,13 @@ namespace Blue_Jays_Manager
                 }
                 else
                 {
-
                     LblName.Text = user.FirstName + " " + user.LastName;
                     LblEmail.Text = user.Email;
                     LblRole.Text = user.Role;
 
-
                     PasswordPanel.Visible = false;
                 }
-
             }
-
         }
 
         protected void LinkBtnPasswordChange_Click(object sender, EventArgs e)
@@ -47,39 +43,42 @@ namespace Blue_Jays_Manager
 
         protected void BtnChangePassword_Click(object sender, EventArgs e)
         {
-            AdminUser user = (AdminUser)Session["AdminUser"];
-            string newPassWord = newPass.Text;
-
-            string currentPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(currentPass.Text, "SHA1");
-            string newPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(newPassWord, "SHA1");
-            int rowAffected = 0;
-
-            if (user.Password == currentPassword)
+            if (Page.IsValid)
             {
-                rowAffected = AdminUserDataLayer.ChangeUserPassword(user.Id, newPassword);
-            }
+                AdminUser user = (AdminUser)Session["AdminUser"];
+                string newPassWord = newPass.Text;
 
-            if (rowAffected > 0)
-            {
-                Models.Correspondence.Email.PasswordChangeConfirmation(user.FirstName, user.LastName, user.UserName, newPassWord, user.Role, user.Email);
-                LblConfirm.Text = "Password successfully changed. Email confirmation has been sent.";
-                LblConfirm.ForeColor = System.Drawing.Color.Green;
-                PasswordPanel.Visible = false;
-                currentPass.Text = "";
-                newPass.Text = "";
-                confirmPass.Text = "";
-                HttpCookie cookie = Request.Cookies["AdminUser"];
-                if (cookie != null)
+                string currentPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(currentPass.Text, "SHA1");
+                string newPassword = FormsAuthentication.HashPasswordForStoringInConfigFile(newPassWord, "SHA1");
+                int rowAffected = 0;
+
+                if (user.Password == currentPassword)
                 {
-                    cookie.Values.Remove("password");
-                    cookie["password"] = newPassWord;
-                    Response.Cookies.Add(cookie);
+                    rowAffected = AdminUserDataLayer.ChangeUserPassword(user.Id, newPassword);
                 }
-            }
-            else
-            {
-                LblConfirm.Text = "Password could not be changed. Please see IT department.";
-                LblConfirm.ForeColor = System.Drawing.Color.Red;
+
+                if (rowAffected > 0)
+                {
+                    Models.Correspondence.Email.PasswordChangeConfirmation(user.FirstName, user.LastName, user.UserName, newPassWord, user.Role, user.Email);
+                    LblConfirm.Text = "Password successfully changed. Email confirmation has been sent.";
+                    LblConfirm.ForeColor = System.Drawing.Color.Green;
+                    PasswordPanel.Visible = false;
+                    currentPass.Text = "";
+                    newPass.Text = "";
+                    confirmPass.Text = "";
+                    HttpCookie cookie = Request.Cookies["AdminUser"];
+                    if (cookie != null)
+                    {
+                        cookie.Values.Remove("password");
+                        cookie["password"] = newPassWord;
+                        Response.Cookies.Add(cookie);
+                    }
+                }
+                else
+                {
+                    LblConfirm.Text = "Password could not be changed. Please see IT department.";
+                    LblConfirm.ForeColor = System.Drawing.Color.Red;
+                } 
             }
         }
     }

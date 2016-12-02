@@ -70,8 +70,8 @@ namespace Blue_Jays_Manager
 
                 age.Text = _calculateAge(dateOfBirth).ToString();
 
-                // PLAYER BIO ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                List<PlayerBio> pBio = DataRetrieval.SelectPlayerBioWherePlayerNumEquals(playerNum);
+                //PLAYER BIO ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+               List < PlayerBio > pBio = DataRetrieval.SelectPlayerBioWherePlayerNumEquals(playerNum);
 
                 foreach (PlayerBio pb in pBio)
                 {
@@ -105,7 +105,7 @@ namespace Blue_Jays_Manager
                     bioDebut.Text = ": " + pb.Debut;
                 }
 
-                // PLAYER STATS SUMMARY ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                //PLAYER STATS SUMMARY++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 List<PlayerStatsSummary> pStatsSummary = DataRetrieval.SelectPlayerStatsSummaryWherePlayerNumEquals(playerNum);
 
                 PlayerRosterGridView.DataSource = pStatsSummary;
@@ -118,14 +118,14 @@ namespace Blue_Jays_Manager
 
                 displayPitchingStats(pitchingStats);
 
-                // PLAYER BATTING STATS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                //PLAYER BATTING STATS++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 battingName.Text = player.Name.ToString();
 
                 battingStats = DataRetrieval.SelectBattingStatsyWherePlayerNumEquals(playerNum);
 
                 displayBattingStats(battingStats);
 
-                // PLAYER FIELDING STATS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                //PLAYER FIELDING STATS++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 fieldingName.Text = player.Name.ToString();
 
                 fieldingStats = DataRetrieval.SelectFieldingStatsyWherePlayerNumEquals(playerNum);
@@ -308,7 +308,5 @@ namespace Blue_Jays_Manager
 
             return age;
         }
-
-
     }
 }
