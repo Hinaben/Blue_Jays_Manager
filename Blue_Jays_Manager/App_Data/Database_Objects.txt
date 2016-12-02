@@ -917,3 +917,152 @@ BEGIN
     retVal := '9';
   END IF;
 END;
+
+------------------------------12-01-2016----------------------------------------
+
+create or replace PROCEDURE getLockedUserss_sp
+(
+ref_cur OUT SYS_REFCURSOR
+)
+IS
+BEGIN
+  OPEN ref_cur FOR
+    select FirstName, LastName, UserName, Role, IsLocked, Email from tblUsers where IsLocked = 1;
+END;
+
+create or replace PROCEDURE selectAllCoaches_sp(
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT CoachRoster.Name, CoachRoster.Position, CoachRoster.CoachNumber, 
+        (SELECT tblUsers.ISLOCKED FROM tblUsers WHERE CONCAT(CONCAT(tblUsers.FIRSTNAME, ' '), tblUsers.LASTNAME) = CoachRoster.Name) AS "IsLocked"
+        FROM CoachRoster; 
+END;
+
+
+create or replace PROCEDURE selectAllPlayers_sp(
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM PLAYERROSTER;
+END;
+
+
+create or replace PROCEDURE selectBattingStats_sp
+(
+  player_num IN BATTINGSTATS.PLAYERNUM%TYPE,
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM BATTINGSTATS
+    WHERE PLAYERNUM = player_num
+    ORDER BY BATSTATYEAR;
+END;
+
+
+create or replace PROCEDURE selectFieldingStats_sp
+(
+  player_num IN FIELDINGSTATS.PLAYERNUM%TYPE,
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM FIELDINGSTATS
+    WHERE PLAYERNUM = player_num
+    ORDER BY FIELDSTATYEAR;
+END;
+
+
+create or replace PROCEDURE selectPitchingStats_sp
+(
+  player_num IN PITCHINGSTATS.PLAYERNUM%TYPE,
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM PITCHINGSTATS
+    WHERE PLAYERNUM = player_num
+    ORDER BY PITCHSTATYEAR;
+END;
+
+
+create or replace PROCEDURE selectPlayerBio_sp(
+  player_num IN PLAYERBIO.PLAYERNUM%TYPE,
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM PLAYERBIO
+    WHERE PLAYERNUM = player_num;
+END;
+
+
+create or replace PROCEDURE selectPlayerStatsSummary_sp
+(
+  player_num IN PLAYERSTATSSUMMARIES.PLAYERNUM%TYPE,
+  ref_cur OUT SYS_REFCURSOR
+)
+IS
+
+BEGIN
+  OPEN ref_cur FOR
+    SELECT *
+    FROM PLAYERSTATSSUMMARIES
+    WHERE PLAYERNUM = player_num
+    ORDER BY SUMMARYYEAR;
+END;
+
+
+create or replace procedure spEnableAdminUser
+(
+  first_name TBLUSERS.FIRSTNAME%TYPE,
+  last_name TBLUSERS.LASTNAME%TYPE,
+  affected_row OUT VARCHAR2
+)
+as
+Begin
+  Update tblUsers
+  set Attempts = 0, IsLocked = Null, LockedDate = Null
+  where FirstName = first_name and LastName = last_name;
+  
+  affected_row := TO_CHAR(sql%rowcount);
+End;
+
+
+create or replace PROCEDURE spSelectPlayerRoster
+  (
+    player_roster out sys_refcursor
+  )
+   is
+   begin
+     open player_roster for
+       select PLayerID,
+            PlayerNum
+           ,Name
+           ,Position
+           ,Height
+           ,Weight
+           ,SkillOrientation
+           ,DateOfBirth
+        from PLAYERROSTER;
+end;
