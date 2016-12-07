@@ -152,6 +152,7 @@ namespace Blue_Jays_Manager
 
         protected void PlayerRosterGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
+            bool deleted = false;
             if (Cache["PlayerRoster"] != null)
             {
                 List<PlayerRoster> roster = (List<PlayerRoster>)Cache["PlayerRoster"];
@@ -162,15 +163,12 @@ namespace Blue_Jays_Manager
 
                 if (player != null)
                 {
-                    roster.Remove(player);
-                    Cache.Insert("PlayerRoster", roster);
-                }
-
-                if ((bool)Session["PlayerChanges"] == false)
-                {
-                    Session["PlayerChanges"] = true;
-                    SavePlayerChanges.Enabled = true;
-                    SavePlayerChanges.Visible = true;
+                    deleted = DatabaseUpdate.DeletePlayer(player.PlayerNum);
+                    if(deleted)
+                    {
+                        roster.Remove(player);
+                        Cache.Insert("PlayerRoster", roster);
+                    } 
                 }
 
                 PlayerRosterGridView.EditIndex = -1;
