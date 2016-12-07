@@ -17,90 +17,160 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
     {
         public static int SaveAllPlayers(List<PlayerRoster> roster)
         {
-            int truncated = 0;
-            int inserted = 0;
+            int updated = 0;
             int i = 1;
 
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = null;
-                cmd = new OracleCommand("truncate table PlayerRoster", con);
 
                 con.Open();
-                truncated = cmd.ExecuteNonQuery();
-
-                if (truncated < 0)
-                {
                     foreach (PlayerRoster p in roster)
                     {
-                        inserted += InsertIntoPlayerRoster(con, p, i);
+                        updated += UpdatePlayerRoster(con, p);
                         i++;
                     }
-                }
             }
-            return inserted;
+            return updated;
         }
 
-        private static int InsertIntoPlayerRoster(OracleConnection con, PlayerRoster p, int i)
+        private static int UpdatePlayerRoster(OracleConnection con, PlayerRoster p)
         {
-            OracleCommand cmd = new OracleCommand("spInsertIntoPlayerRoster", con);
+            OracleCommand cmd = new OracleCommand("updatePlayerRoster_sp", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new OracleParameter("playerID", i));
             cmd.Parameters.Add(new OracleParameter("playerNum", p.PlayerNum));
             cmd.Parameters.Add(new OracleParameter("name", p.Name));
             cmd.Parameters.Add(new OracleParameter("position", p.Position));
             cmd.Parameters.Add(new OracleParameter("height", p.Height));
             cmd.Parameters.Add(new OracleParameter("weight", p.Weight));
-            cmd.Parameters.Add(new OracleParameter("skillOrientation", p.SkillOrientation));
-            cmd.Parameters.Add(new OracleParameter("dateOfBirth", p.DateOfBirth));
 
             return cmd.ExecuteNonQuery();
         }
 
         public static int SaveAllCoaches(List<CoachRoster> roster)
         {
-            int truncated = 0;
-            int inserted = 0;
+            int updated = 0;
             int i = 1;
 
             using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
             {
-                OracleCommand cmd = null;
-                cmd = new OracleCommand("truncate table CoachRoster", con);
-
                 con.Open();
-                truncated = cmd.ExecuteNonQuery();
-
-                if (truncated < 0)
-                {
+                //truncated = cmd.ExecuteNonQuery();
+                
                     foreach (CoachRoster c in roster)
                     {
-                        inserted += InsertIntoCoachRoster(con, c, i);
+                        updated += UpdateCoachRoster(con, c);
                         i++;
-                    }
-                }
+                    } 
             }
-            return inserted;
+            return updated;
         }
 
-        private static int InsertIntoCoachRoster(OracleConnection con, CoachRoster c, int i)
+        private static int UpdateCoachRoster(OracleConnection con, CoachRoster c)
         {
-            OracleCommand cmd = new OracleCommand("spInsertIntoCoachRoster", con);
+            OracleCommand cmd = new OracleCommand("updateCoachRoster_sp", con);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.Add(new OracleParameter("coachID", i));
-            cmd.Parameters.Add(new OracleParameter("coachNumber", c.CoachNumber));
+            cmd.Parameters.Add(new OracleParameter("coachNum", c.CoachNumber));
             cmd.Parameters.Add(new OracleParameter("name", c.Name));
             cmd.Parameters.Add(new OracleParameter("position", c.Position));
 
-            cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 30));
-            cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
+            return cmd.ExecuteNonQuery();
+        }
 
-            cmd.ExecuteNonQuery();
+        public static bool AddNewPlayer(PlayerRoster _newPlayer)
+        {
+            string val = null;
+            int valid = 0;
 
-            string ret_val = cmd.Parameters["retVal"].Value.ToString();
-            int val = Convert.ToInt32(ret_val);
-            return val;
+            using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            {
+
+                OracleCommand cmd = new OracleCommand("addNewPlayer_sp", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new OracleParameter("playerID", _newPlayer.PlayerRosterID));
+                cmd.Parameters.Add(new OracleParameter("playerNum", _newPlayer.PlayerNum));
+                cmd.Parameters.Add(new OracleParameter("name", _newPlayer.Name));
+                cmd.Parameters.Add(new OracleParameter("position", _newPlayer.Position));
+                cmd.Parameters.Add(new OracleParameter("height", _newPlayer.Height));
+                cmd.Parameters.Add(new OracleParameter("weight", _newPlayer.Weight));
+                cmd.Parameters.Add(new OracleParameter("skillOrientation", _newPlayer.SkillOrientation));
+                cmd.Parameters.Add(new OracleParameter("dateOfBirth", _newPlayer.DateOfBirth));
+
+                cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 30));
+                cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                val = cmd.Parameters["retVal"].Value.ToString();
+                valid = Convert.ToInt16(val);
+            }
+            return Convert.ToBoolean(valid);
+        }
+
+        public static bool AddNewCoach(CoachRoster _newCoach)
+        {
+            string val = null;
+            int valid = 0;
+
+            using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            {
+
+                OracleCommand cmd = new OracleCommand("addNewCoach_sp", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new OracleParameter("coachID", _newCoach.CoachRosterID));
+                cmd.Parameters.Add(new OracleParameter("coachNum", _newCoach.CoachNumber));
+                cmd.Parameters.Add(new OracleParameter("c_name", _newCoach.Name));
+                cmd.Parameters.Add(new OracleParameter("c_position", _newCoach.Position));
+
+                cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 30));
+                cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+                val = cmd.Parameters["retVal"].Value.ToString();
+                valid = Convert.ToInt16(val);
+            }
+            return Convert.ToBoolean(valid);
+        }
+
+        public static bool DeleteCoach(int coachNum)
+        {
+            int valid = 0;
+            using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            {
+                OracleCommand cmd = new OracleCommand("deleteCoach_sp", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new OracleParameter("coach_num", coachNum));
+                
+                //cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 30));
+                //cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
+
+                con.Open();
+                valid = cmd.ExecuteNonQuery();
+            }
+            return Convert.ToBoolean(valid);
+        }
+
+        public static bool DeletePlayer(int playerNum)
+        {
+            int valid = 0;
+            using (OracleConnection con = new OracleConnection(ConfigurationManager.ConnectionStrings["BlueJaysConnection"].ConnectionString))
+            {
+                OracleCommand cmd = new OracleCommand("deletePlayer_sp", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.Add(new OracleParameter("player_num", playerNum));
+
+                //cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 30));
+                //cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
+
+                con.Open();
+                valid = cmd.ExecuteNonQuery();
+            }
+            return Convert.ToBoolean(valid);
         }
     }
 }
