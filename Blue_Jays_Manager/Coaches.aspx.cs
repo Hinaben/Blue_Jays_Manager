@@ -136,30 +136,39 @@ namespace Blue_Jays_Manager
 
         protected void CoachRosterGridView_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
+            bool deleted = false;
             if (Cache["CoachRoster"] != null)
             {
                 List<CoachRoster> roster = (List<CoachRoster>)Cache["CoachRoster"];
 
                 string coachNum = CoachRosterGridView.Rows[e.RowIndex].Cells[2].Text;
 
-                Debug.WriteLine(coachNum);
-
                 CoachRoster coach = roster.SingleOrDefault(x => x.CoachNumber == Convert.ToInt32(coachNum));
-
-
 
                 if (coach != null)
                 {
-                    roster.Remove(coach);
-                    Cache.Insert("CoachRoster", roster);
+                    deleted = DatabaseUpdate.DeleteCoach(coach.CoachNumber);
+                    if(deleted)
+                    {
+                        roster.Remove(coach);
+                        Cache.Insert("CoachRoster", roster);
+
+                        LblError.Text = "Coach has been deleted successfully.";
+                        LblError.ForeColor = System.Drawing.Color.Green;
+                    }  
+                    else
+                    {
+                        LblError.Text = "There was an issue in deleting coach. Please see IT Department.";
+                        LblError.ForeColor = System.Drawing.Color.Red;
+                    }    
                 }
 
-                if ((bool)Session["CoachChanges"] == false)
-                {
-                    Session["CoachChanges"] = true;
-                    SaveCoachChanges.Enabled = true;
-                    SaveCoachChanges.Visible = true;
-                }
+                //if ((bool)Session["CoachChanges"] == false)
+                //{
+                //    Session["CoachChanges"] = true;
+                //    SaveCoachChanges.Enabled = true;
+                //    SaveCoachChanges.Visible = true;
+                //}
 
                 CoachRosterGridView.EditIndex = -1;
                 CoachRosterGridView.DataSource = (List<CoachRoster>)Cache["CoachRoster"];

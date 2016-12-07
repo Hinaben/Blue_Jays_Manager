@@ -1,4 +1,5 @@
-﻿using Blue_Jays_Manager.Models.DataModels;
+﻿using Blue_Jays_Manager.Models.DataAccessLayer;
+using Blue_Jays_Manager.Models.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -126,6 +127,7 @@ namespace Blue_Jays_Manager
         protected void AddPlayerButton_Click(object sender, EventArgs e)
         {
             bool existPlayer = false;
+            PlayerRoster _newPlayer = new PlayerRoster();
 
             foreach (PlayerRoster player in playerRoster)
             {
@@ -143,27 +145,30 @@ namespace Blue_Jays_Manager
 
                 monthName = monthName.Substring(0, 1).ToUpper() + monthName.Substring(1,2).ToLower();
 
-                playerRoster.Add
-                (
-                    new PlayerRoster()
-                    {
-                        PlayerNum = int.Parse(PlayerNum.Text),
-                        Name = FirstName.Text + " " + LastName.Text,
-                        Position = positionDropDownList.SelectedValue,
-                        Height = int.Parse(playerHeight.Text),
-                        Weight = int.Parse(playerWeight.Text),
-                        DateOfBirth = monthName + " " +
-                        dobDayDropDownList.SelectedValue + " " + dobYearDropDownList.SelectedValue,
-                        SkillOrientation = playerBattingHand.Text + "/" + playerThrowingHand.Text
-                    }
-                );
+                _newPlayer.PlayerRosterID = playerRoster.Count + 25;
+                _newPlayer.PlayerNum = int.Parse(PlayerNum.Text);
+                _newPlayer.Name = FirstName.Text + " " + LastName.Text;
+                _newPlayer.Position = positionDropDownList.SelectedValue;
+                _newPlayer.Height = int.Parse(playerHeight.Text);
+                _newPlayer.Weight = int.Parse(playerWeight.Text);
+                _newPlayer.DateOfBirth = dobDayDropDownList.SelectedValue + "-" + monthName.ToUpper() + "-" +  dobYearDropDownList.SelectedValue;
+                _newPlayer.SkillOrientation = playerBattingHand.Text + "/" + playerThrowingHand.Text;
 
-                Cache["PlayerRoster"] = playerRoster;
-                Session["PlayerChanges"] = true;
+                bool added = DatabaseUpdate.AddNewPlayer(_newPlayer);
 
-                Server.Transfer("Players.aspx");
+                if(added)
+                {
+                    playerRoster.Add(_newPlayer);
+
+                    Cache["PlayerRoster"] = playerRoster;
+
+                    Server.Transfer("Players.aspx");
+                }
+                else
+                {
+                    PlayerExists.Text = "There was an issue saving player to Roster";
+                }  
             }
-
             else
             {
                 PlayerExists.Text = "There is already an existing player with the number " + PlayerNum.Text + "!";
