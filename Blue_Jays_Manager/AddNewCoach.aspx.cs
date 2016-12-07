@@ -1,4 +1,5 @@
-﻿using Blue_Jays_Manager.Models.DataModels;
+﻿using Blue_Jays_Manager.Models.DataAccessLayer;
+using Blue_Jays_Manager.Models.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,14 +25,14 @@ namespace Blue_Jays_Manager
                 else
                 {
                     coachRoster = (List<CoachRoster>)Cache["CoachRoster"];
-                }
-                
+                }   
             }
-
         }
 
         protected void AddCoachButton_Click(object sender, EventArgs e)
         {
+            CoachRoster _newCoach = new CoachRoster();
+
             bool existCoach = false;
             coachRoster = (List<CoachRoster>)Cache["CoachRoster"];
 
@@ -46,28 +47,29 @@ namespace Blue_Jays_Manager
 
             if (!existCoach)
             {
+                _newCoach.CoachRosterID = coachRoster.Count + 1;
+                _newCoach.CoachNumber = int.Parse(CoachNum.Text);
+                _newCoach.Name = FirstName.Text + " " + LastName.Text;
+                _newCoach.Position = pos.Text;
+                _newCoach.IsLocked = "Access";
 
-                coachRoster.Add
-                (
-                    new CoachRoster()
-                    {
-                        CoachNumber = int.Parse(CoachNum.Text),
-                        Name = FirstName.Text + " " + LastName.Text,
-                        Position = pos.Text,
-                        IsLocked = "Access"
-                    }
-                );
+                bool updated = DatabaseUpdate.AddNewCoach(_newCoach);
 
-                Cache["CoachRoster"] = coachRoster;
-                Session["CoachChanges"] = true;
-                Server.Transfer("Coaches.aspx");
+                if(updated)
+                {
+                    coachRoster.Add(_newCoach);
+                    Cache["CoachRoster"] = coachRoster;
+                    Server.Transfer("Coaches.aspx");
+                }
+                else
+                {
+                    CoachExists.Text = "There was an issue adding coach to Roster";
+                }
             }
-
             else
             {
                 CoachExists.Text = "There is already an existing coach with the number " + CoachNum.Text + "!";
             }
-
         }
     }
 }
