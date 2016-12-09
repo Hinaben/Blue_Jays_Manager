@@ -90,12 +90,12 @@ namespace Blue_Jays_Manager
 
         protected void PasswordLinkBtn_Click(object sender, EventArgs e)
         {
-            Server.Transfer("JaysReset.aspx?id=password");
+           // Server.Transfer("JaysReset.aspx?id=password");
         }
 
         protected void UsernameLinkBtn_Click(object sender, EventArgs e)
         {
-            Server.Transfer("JaysReset.aspx?id=username");
+            //Server.Transfer("JaysReset.aspx?id=username");
         }
     }
 }

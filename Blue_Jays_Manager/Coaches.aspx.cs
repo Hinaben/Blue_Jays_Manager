@@ -98,7 +98,7 @@ namespace Blue_Jays_Manager
 
                         if (unlocked > 0)
                         {
-                            Models.Correspondence.Email.AccountUnlockedConfirmation(lockedUser.FirstName, lockedUser.LastName, lockedUser.Email);
+                            //Models.Correspondence.Email.AccountUnlockedConfirmation(lockedUser.FirstName, lockedUser.LastName, lockedUser.Email);
                             List<CoachRoster> roster = (List<CoachRoster>)Cache["CoachRoster"];
                             CoachRoster coach = roster.SingleOrDefault(x => x.Name == firstName + " " + lastName);
                             int index = roster.IndexOf(coach);
@@ -107,7 +107,7 @@ namespace Blue_Jays_Manager
                             roster.Insert(index, coach);
                             CoachRosterGridView.DataSource = roster;
                             CoachRosterGridView.DataBind();
-                            LblError.Text = "Account unlocked. Email notification has been sent to user";
+                            LblError.Text = "Account unlocked.";
                             LblError.ForeColor = System.Drawing.Color.Green;
                         }
                     }

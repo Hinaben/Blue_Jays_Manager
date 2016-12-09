@@ -41,7 +41,7 @@ namespace Blue_Jays_Manager
 
             if (arr != null)
             {
-                int sent = Models.Correspondence.Email.SendPasswordChangeConfirmation(newPassword, arr[0], arr[1], arr[2], arr[3]);
+                int sent = 1; //Models.Correspondence.Email.SendPasswordChangeConfirmation(newPassword, arr[0], arr[1], arr[2], arr[3]);
                 if (sent == 1)
                 {
                     confirmLabel.Text = "Password has been reset. Email confirmation has been sent with the details";

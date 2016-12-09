@@ -96,9 +96,11 @@ namespace Blue_Jays_Manager.Models.Correspondence
             mailMessage.Subject = "Toronto Blue Jays";
 
 
-            SmtpClient client = new SmtpClient();
-            client.Send(mailMessage);
-            sent = 1;
+            using(SmtpClient client = new SmtpClient())
+            {
+                client.Send(mailMessage);
+                sent = 1; 
+            }
             return sent;
         }
 

@@ -64,8 +64,8 @@ namespace Blue_Jays_Manager
                         }
                         else
                         {
-                            Models.Correspondence.Email.RegistrationConfirmation(UserName.Text, Password.Text, FirstName.Text, LastName.Text, Email.Text, exist.CoachNumber);
-                            UserExists.Text = "Succesfull Registration. Email Confirmation has been sent to your email";
+                            //Models.Correspondence.Email.RegistrationConfirmation(UserName.Text, Password.Text, FirstName.Text, LastName.Text, Email.Text, exist.CoachNumber);
+                            UserExists.Text = "Succesfull Registration.";
                             UserExists.ForeColor = System.Drawing.Color.Green;
                             CoachId.Text = "";
                             FirstName.Text = "";

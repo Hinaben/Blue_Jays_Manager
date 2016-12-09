@@ -59,8 +59,8 @@ namespace Blue_Jays_Manager
 
                 if (rowAffected > 0)
                 {
-                    Models.Correspondence.Email.PasswordChangeConfirmation(user.FirstName, user.LastName, user.UserName, newPassWord, user.Role, user.Email);
-                    LblConfirm.Text = "Password successfully changed. Email confirmation has been sent.";
+                    //Models.Correspondence.Email.PasswordChangeConfirmation(user.FirstName, user.LastName, user.UserName, newPassWord, user.Role, user.Email);
+                    LblConfirm.Text = "Password successfully changed.";
                     LblConfirm.ForeColor = System.Drawing.Color.Green;
                     PasswordPanel.Visible = false;
                     currentPass.Text = "";
