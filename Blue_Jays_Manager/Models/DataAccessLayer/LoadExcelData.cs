@@ -232,12 +232,7 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             cmd.Parameters.Add(new OracleParameter("name", row["Name"]));
             cmd.Parameters.Add(new OracleParameter("position", row["Position"]));
 
-            cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 30));
-            cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
-
             cmd.ExecuteNonQuery();
-
-            string ret_val = cmd.Parameters["retVal"].Value.ToString();
         }
 
         private static int InsertPlayerBio(OracleConnection conn, DataRow row)

@@ -95,9 +95,13 @@
                 <h6>Copyright &copy; <%: DateTime.Now.Year %> Toronto Blue Jays Manager
                     <br />
                     Developed by:
-                    <asp:HyperLink ID="HyperLink1" runat="server" href="http://studentweb.cencol.ca/vpersad3/">Vinood Persad</asp:HyperLink>
+                    <asp:HyperLink ID="HyperLink1" runat="server" href="#">Vinood</asp:HyperLink>
                     |
-                    <asp:HyperLink ID="HyperLink2" runat="server" href="http://studentweb.cencol.ca/kma45/">Kevin Ma</asp:HyperLink>
+                    <asp:HyperLink ID="HyperLink2" runat="server" href="#">Hinaben</asp:HyperLink>
+                    |
+                    <asp:HyperLink ID="HyperLink8" runat="server" href="#">Parthkumar</asp:HyperLink>
+                    |
+                    <asp:HyperLink ID="HyperLink9" runat="server" href="#">Guillermo</asp:HyperLink>
 
                 </h6>
 
