@@ -10,7 +10,9 @@
     <link rel="icon" href="Images/favicon.ico" type="image/x-icon" />
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <link href="Content/BlueJaysStyle.css" rel="stylesheet" />
-
+    <script src="Scripts/jquery-3.1.0.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/BlueJays.js"></script>
 
 </head>
 <body>
@@ -93,9 +95,13 @@
                 <h6>Copyright &copy; <%: DateTime.Now.Year %> Toronto Blue Jays Manager
                     <br />
                     Developed by:
-                    <asp:HyperLink ID="HyperLink1" runat="server" href="http://studentweb.cencol.ca/vpersad3/">Vinood Persad</asp:HyperLink>
+                    <asp:HyperLink ID="HyperLink1" runat="server" href="#">Vinood</asp:HyperLink>
                     |
-                    <asp:HyperLink ID="HyperLink2" runat="server" href="http://studentweb.cencol.ca/kma45/">Kevin Ma</asp:HyperLink>
+                    <asp:HyperLink ID="HyperLink2" runat="server" href="#">Hinaben</asp:HyperLink>
+                    |
+                    <asp:HyperLink ID="HyperLink8" runat="server" href="#">Parthkumar</asp:HyperLink>
+                    |
+                    <asp:HyperLink ID="HyperLink9" runat="server" href="#">Guillermo</asp:HyperLink>
 
                 </h6>
 
@@ -103,8 +109,6 @@
         </div>
     </form>
 
-    <script src="Scripts/jquery-3.1.0.min.js"></script>
-    <script src="Scripts/bootstrap.min.js"></script>
-    <script src="Scripts/BlueJays.js"></script>
+    
 </body>
 </html>

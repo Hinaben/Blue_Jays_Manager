@@ -96,7 +96,7 @@
 
         <%--STATS--%>
         <div class="row" >
-            <div id="statsDiv" class="panel panel-default">
+            <div id="statsDiv" class="">
                 <div class="row" style="padding: 3vmin 3vmin 5px 3vmin">
                     <div class="col-md-5">
                         <hr />
@@ -110,13 +110,13 @@
                 </div>
 
                 <div class="row">
-                    <ul class="nav nav-tabs col-md-offset-1 col-md-6">
-                        <%--<ul class="nav nav-tabs col-md-offset-4 col-md-4">--%>
+                    <%--<ul class="nav nav-tabs col-md-offset-1 col-md-6">
+                        <<ul class="nav nav-tabs col-md-offset-4 col-md-4">
                         <li class="active"><a data-toggle="tab" href="#pitching">PITCHING</a></li>
                         <li class=""><a data-toggle="tab" href="#batting">BATTING</a></li>
                         <li class=""><a data-toggle="tab" href="#fielding">FIELDING</a></li>
-                    </ul>
-                    <span class="col-md-5">
+                    </ul>--%>
+                    <span class="col-md-12">
                         <asp:Label Text="Filter by year: " runat="server" />
                         <asp:TextBox ID="statsFilterTextBox" runat="server" />
                         <asp:LinkButton ID="fillterStatsButton" OnClick="filterStatsButton_Click" CssClass="btn btn-default" BorderColor="#134A8E" ForeColor="White" BackColor="#134A8E" runat="server">Filter Stats <span class="glyphicon glyphicon-stats"></span></asp:LinkButton>
@@ -127,9 +127,9 @@
                 </asp:ScriptManager>
                 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                     <ContentTemplate>
-
-                        <div class="tab-content" style="padding-left: 5vw; padding-right: 5vw; min-height: 30vh">
-                            <div id="pitching" class="tab-pane fade in active">
+                        <%--//tab-content--%>
+                        <div class="col-md-12 " style="padding-left: 5vw; padding-right: 5vw; min-height: 30vh">
+                            <div id="pitching" class="//tab-pane //fade //in active">
                                 <h3>
                                     <asp:Label ID="pitchingName" runat="server" Text="Name"></asp:Label>
                                     Pitching Stats
@@ -174,7 +174,7 @@
 
 
                             </div>
-                            <div id="batting" class="tab-pane fade">
+                            <div id="batting" class="col-md-12">
                                 <h3>
                                     <asp:Label ID="battingName" runat="server" Text="Name"></asp:Label>
                                     Batting Stats
@@ -211,7 +211,7 @@
                                     <HeaderStyle BackColor="#243B69" ForeColor="White" />
                                 </asp:GridView>
                             </div>
-                            <div id="fielding" class="tab-pane fade">
+                            <div id="fielding" class="col-md-12">
                                 <h3>
                                     <asp:Label ID="fieldingName" runat="server" Text="Name"></asp:Label>
                                     Fielding Stats

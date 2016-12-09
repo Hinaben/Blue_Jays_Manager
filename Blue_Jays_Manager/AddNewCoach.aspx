@@ -2,8 +2,8 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container-fluid" style="padding-bottom: 10px">
         
-        <div class="col-md-4"></div>
-        <div class="col-md-4 container registerView">
+        <div class="col-md-2"></div>
+        <div class="col-md-6 container registerView">
 
     <div id="addCoachFormDiv" class="form-horizontal" style=" margin-right: 30px; ">
         <div class="page-header" style="margin-bottom:5px">
@@ -53,7 +53,7 @@
         <div class="form-group pull-right">
             <div class="col-md-12">
                 <input id="Resetbtn" type="reset" class="btn btn-default" style="width: 90px"  value="reset" />
-                 <asp:LinkButton ID="AddCoachButtoon" OnClick="AddCoachButton_Click"  CssClass="btn btn-primary" BackColor="#134A8E" ForeColor="#ffffff" Style="width: 110px"  runat="server">Add Player <span  class='glyphicon glyphicon-chevron-right'></span></asp:LinkButton>
+                 <asp:LinkButton ID="AddCoachButtoon" OnClick="AddCoachButton_Click"  CssClass="btn btn-primary" BackColor="#134A8E" ForeColor="#ffffff" Style="width: 110px"  runat="server">Add Coach <span  class='glyphicon glyphicon-chevron-right'></span></asp:LinkButton>
                
             </div>
         </div>
