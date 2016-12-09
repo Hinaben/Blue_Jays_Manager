@@ -47,7 +47,7 @@ namespace Blue_Jays_Manager
 
             if (!existCoach)
             {
-                _newCoach.CoachRosterID = coachRoster.Count + 1;
+                _newCoach.CoachRosterID = coachRoster.Count + 10;
                 _newCoach.CoachNumber = int.Parse(CoachNum.Text);
                 _newCoach.Name = FirstName.Text + " " + LastName.Text;
                 _newCoach.Position = pos.Text;

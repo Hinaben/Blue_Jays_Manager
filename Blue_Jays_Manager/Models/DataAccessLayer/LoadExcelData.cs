@@ -44,43 +44,43 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                             }
                             break;
 
-                        //case "CoachRoster":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertCoachRoster(con, row);
-                        //    }
-                        //    break;
+                        case "CoachRoster":
+                            foreach (DataRow row in table.Rows)
+                            {
+                                InsertCoachRoster(con, row);
+                            }
+                            break;
 
-                        //case "PlayerBio":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertPlayerBio(con, row);
-                        //    }
-                        //    break;
-                        //case "PitchingStats":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertPitchingStats(con, row);
-                        //    }
-                        //    break;
-                        //case "FieldingStats":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertFieldingStats(con, row);
-                        //    }
-                        //    break;
-                        //case "PlayerStatsSummary":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertPlayerStatsSummary(con, row);
-                        //    }
-                        //    break;
-                        //case "BattingStats":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertBattingStats(con, row);
-                        //    }
-                        //    break;
+                        case "PlayerBio":
+                            foreach (DataRow row in table.Rows)
+                            {
+                                InsertPlayerBio(con, row);
+                            }
+                            break;
+                        case "PitchingStats":
+                            foreach (DataRow row in table.Rows)
+                            {
+                                InsertPitchingStats(con, row);
+                            }
+                            break;
+                        case "FieldingStats":
+                            foreach (DataRow row in table.Rows)
+                            {
+                                InsertFieldingStats(con, row);
+                            }
+                            break;
+                        case "PlayerStatsSummary":
+                            foreach (DataRow row in table.Rows)
+                            {
+                                InsertPlayerStatsSummary(con, row);
+                            }
+                            break;
+                        case "BattingStats":
+                            foreach (DataRow row in table.Rows)
+                            {
+                                InsertBattingStats(con, row);
+                            }
+                            break;
 
                         default:
                             break;

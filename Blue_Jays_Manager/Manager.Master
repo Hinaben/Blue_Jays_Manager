@@ -10,7 +10,9 @@
     <link rel="icon" href="Images/favicon.ico" type="image/x-icon" />
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
     <link href="Content/BlueJaysStyle.css" rel="stylesheet" />
-
+    <script src="Scripts/jquery-3.1.0.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/BlueJays.js"></script>
 
 </head>
 <body>
@@ -103,8 +105,6 @@
         </div>
     </form>
 
-    <script src="Scripts/jquery-3.1.0.min.js"></script>
-    <script src="Scripts/bootstrap.min.js"></script>
-    <script src="Scripts/BlueJays.js"></script>
+    
 </body>
 </html>

@@ -124,13 +124,9 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                 cmd.Parameters.Add(new OracleParameter("c_name", _newCoach.Name));
                 cmd.Parameters.Add(new OracleParameter("c_position", _newCoach.Position));
 
-                cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 30));
-                cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
-
                 con.Open();
-                cmd.ExecuteNonQuery();
-                val = cmd.Parameters["retVal"].Value.ToString();
-                valid = Convert.ToInt16(val);
+                valid = cmd.ExecuteNonQuery();
+
             }
             return Convert.ToBoolean(valid);
         }
