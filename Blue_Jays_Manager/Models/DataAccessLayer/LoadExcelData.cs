@@ -36,51 +36,51 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
                 {
                     switch (table.TableName)
                     {
-                        case "PlayerRoster":
+                        //case "PlayerRoster":
 
+                        //    foreach (DataRow row in table.Rows)
+                        //    {
+                        //        InsertPlayerRoster(con, row);
+                        //    }
+                        //    break;
+
+                        case "CoachRoster":
                             foreach (DataRow row in table.Rows)
                             {
-                                InsertPlayerRoster(con, row);
+                                InsertCoachRoster(con, row);
                             }
                             break;
 
-                        //case "CoachRoster":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertCoachRoster(con, row);
-                        //    }
-                        //    break;
-
-                        //case "PlayerBio":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertPlayerBio(con, row);
-                        //    }
-                        //    break;
-                        //case "PitchingStats":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertPitchingStats(con, row);
-                        //    }
-                        //    break;
-                        //case "FieldingStats":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertFieldingStats(con, row);
-                        //    }
-                        //    break;
-                        //case "PlayerStatsSummary":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertPlayerStatsSummary(con, row);
-                        //    }
-                        //    break;
-                        //case "BattingStats":
-                        //    foreach (DataRow row in table.Rows)
-                        //    {
-                        //        InsertBattingStats(con, row);
-                        //    }
-                        //    break;
+                        case "PlayerBio":
+                            foreach (DataRow row in table.Rows)
+                            {
+                                InsertPlayerBio(con, row);
+                            }
+                            break;
+                        case "PitchingStats":
+                            foreach (DataRow row in table.Rows)
+                            {
+                                InsertPitchingStats(con, row);
+                            }
+                            break;
+                        case "FieldingStats":
+                            foreach (DataRow row in table.Rows)
+                           {
+                                InsertFieldingStats(con, row);
+                            }
+                            break;
+                        case "PlayerStatsSummary":
+                            foreach (DataRow row in table.Rows)
+                            {
+                                InsertPlayerStatsSummary(con, row);
+                            }
+                            break;
+                        case "BattingStats":
+                            foreach (DataRow row in table.Rows)
+                            {
+                                InsertBattingStats(con, row);
+                            }
+                            break;
 
                         default:
                             break;
@@ -232,12 +232,12 @@ namespace Blue_Jays_Manager.Models.DataAccessLayer
             cmd.Parameters.Add(new OracleParameter("name", row["Name"]));
             cmd.Parameters.Add(new OracleParameter("position", row["Position"]));
 
-            cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 30));
-            cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
+            //cmd.Parameters.Add(new OracleParameter("retVal", OracleDbType.Varchar2, 30));
+            //cmd.Parameters["retVal"].Direction = ParameterDirection.Output;
 
             cmd.ExecuteNonQuery();
 
-            string ret_val = cmd.Parameters["retVal"].Value.ToString();
+            //string ret_val = cmd.Parameters["retVal"].Value.ToString();
         }
 
         private static int InsertPlayerBio(OracleConnection conn, DataRow row)
